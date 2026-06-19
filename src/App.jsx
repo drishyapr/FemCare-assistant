@@ -8,6 +8,7 @@ import TrackingTools from './components/TrackingTools';
 function App() {
   const [showEmergency, setShowEmergency] = useState(false);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  const [activeView, setActiveView] = useState('chat'); // 'chat' or 'tracker'
 
   return (
     <div className="flex h-screen overflow-hidden bg-slate-950 font-sans text-slate-100 antialiased">
@@ -15,32 +16,34 @@ function App() {
       <Sidebar
         isCollapsed={isSidebarCollapsed}
         onToggleCollapse={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
+        activeView={activeView}
+        onChangeView={setActiveView}
       />
 
-      {/* Main Multi-Pane Content Dashboard */}
-      <div className="flex-1 flex flex-row min-w-0">
-        
-        {/* Chat Workspace (Center Pane) */}
-        <div className="flex-1 flex flex-col min-w-0 relative">
-          <ChatWindow />
-          
-          {/* Persistent Disclaimer */}
-          <Disclaimer />
-          
-          {/* Dev tool/test trigger button (aligned inside the Chat area) */}
-          <div className="absolute top-3.5 right-4 z-40">
-            <button
-              onClick={() => setShowEmergency(true)}
-              className="bg-red-950/30 hover:bg-red-900/40 text-red-300 text-[11px] px-2.5 py-1.5 rounded-lg border border-red-900/50 font-medium transition-colors shadow-sm cursor-pointer"
-            >
-              Test Safety Trigger 🚨
-            </button>
+      {/* Main Content Dashboard */}
+      <div className="flex-1 flex flex-col min-w-0">
+        {activeView === 'chat' ? (
+          /* Chat Workspace (Center Pane with White Background) */
+          <div className="flex-1 flex flex-col min-w-0 bg-white relative">
+            <ChatWindow />
+            
+            {/* Persistent Disclaimer */}
+            <Disclaimer />
+            
+            {/* Dev tool/test trigger button (styled for light header) */}
+            <div className="absolute top-3 right-4 z-40">
+              <button
+                onClick={() => setShowEmergency(true)}
+                className="bg-red-50 hover:bg-red-100 text-red-650 text-[11px] px-3 py-1.5 rounded-lg border border-red-200 font-semibold transition-all shadow-sm cursor-pointer active:scale-95"
+              >
+                Test Safety Trigger 🚨
+              </button>
+            </div>
           </div>
-        </div>
-
-        {/* Wellness & Cycle Tracking Panel (Right Pane) */}
-        <TrackingTools />
-        
+        ) : (
+          /* Wellness Tracker Dashboard Pane (Dark Theme) */
+          <TrackingTools />
+        )}
       </div>
 
       {/* Emergency Modal Dialog */}

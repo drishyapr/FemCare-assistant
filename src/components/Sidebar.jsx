@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function Sidebar({ isCollapsed, onToggleCollapse }) {
+export default function Sidebar({ isCollapsed, onToggleCollapse, activeView, onChangeView }) {
   return (
     <div className={`bg-slate-900 text-white flex flex-col h-screen p-4 border-r border-slate-800 transition-all duration-300 ease-in-out relative ${
       isCollapsed ? 'w-16' : 'w-64'
@@ -30,17 +30,34 @@ export default function Sidebar({ isCollapsed, onToggleCollapse }) {
           {isCollapsed ? '•••' : 'Workspace'}
         </div>
         
-        <nav className="space-y-1">
-          <a
-            href="#"
-            className={`flex items-center rounded-xl bg-gradient-to-r from-pink-950/40 to-rose-950/20 text-pink-300 border border-pink-900/40 font-medium transition-all ${
-              isCollapsed ? 'justify-center p-2.5' : 'space-x-3 px-3 py-2.5'
-            }`}
+        <nav className="space-y-1.5">
+          {/* Health Assistant tab */}
+          <button
+            onClick={() => onChangeView('chat')}
+            className={`w-full flex items-center rounded-xl font-medium transition-all cursor-pointer ${
+              activeView === 'chat'
+                ? 'bg-gradient-to-r from-pink-955/40 to-rose-950/20 text-pink-300 border border-pink-900/40'
+                : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800 border border-transparent'
+            } ${isCollapsed ? 'justify-center p-2.5' : 'space-x-3 px-3 py-2.5'}`}
             title="Health Assistant"
           >
             <span className="text-base">💬</span>
             {!isCollapsed && <span className="text-sm whitespace-nowrap overflow-hidden transition-all duration-300">Health Assistant</span>}
-          </a>
+          </button>
+
+          {/* Wellness Tracker tab */}
+          <button
+            onClick={() => onChangeView('tracker')}
+            className={`w-full flex items-center rounded-xl font-medium transition-all cursor-pointer ${
+              activeView === 'tracker'
+                ? 'bg-gradient-to-r from-pink-955/40 to-rose-950/20 text-pink-300 border border-pink-900/40'
+                : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800 border border-transparent'
+            } ${isCollapsed ? 'justify-center p-2.5' : 'space-x-3 px-3 py-2.5'}`}
+            title="Wellness Tracker"
+          >
+            <span className="text-base">📊</span>
+            {!isCollapsed && <span className="text-sm whitespace-nowrap overflow-hidden transition-all duration-300">Wellness Tracker</span>}
+          </button>
         </nav>
       </div>
 
