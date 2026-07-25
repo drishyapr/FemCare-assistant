@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 // Static defaults and helpers defined outside component to maintain purity
 const tenDaysAgoDefault = new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
@@ -30,17 +30,71 @@ const getPhaseAndColor = (day) => {
   }
 };
 
+const formatDateKey = (date) => {
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, '0');
+  const d = String(date.getDate()).padStart(2, '0');
+  return `${y}-${m}-${d}`;
+};
+
+const getNextPeriodStartDate = (lastDateStr) => {
+  if (!lastDateStr) return null;
+  const [year, month, day] = lastDateStr.split('-').map(Number);
+  const date = new Date(year, month - 1, day);
+  date.setDate(date.getDate() + 28);
+  return date;
+};
+
+const isPredictedPeriodDay = (dateToCheck, lastDateStr) => {
+  const start = getNextPeriodStartDate(lastDateStr);
+  if (!start) return false;
+  
+  const end = new Date(start);
+  end.setDate(start.getDate() + 4);
+  
+  const checkTime = new Date(dateToCheck.getFullYear(), dateToCheck.getMonth(), dateToCheck.getDate()).getTime();
+  const startTime = new Date(start.getFullYear(), start.getMonth(), start.getDate()).getTime();
+  const endTime = new Date(end.getFullYear(), end.getMonth(), end.getDate()).getTime();
+  
+  return checkTime >= startTime && checkTime <= endTime;
+};
+
+const formatPredictionWindow = (lastDateStr) => {
+  const start = getNextPeriodStartDate(lastDateStr);
+  if (!start) return "";
+  const end = new Date(start);
+  end.setDate(start.getDate() + 4);
+  
+  const startStr = start.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  const endStr = end.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  return `Predicted Next Period: ${startStr} – ${endStr}`;
+};
+
 export default function TrackingTools() {
-  // Cycle logs: { [day]: { flow: 'none'|'light'|'medium'|'heavy', symptoms: [] } }
-  const [cycleLogs, setCycleLogs] = useState({
-    3: { flow: 'light', symptoms: ['Fatigue'] },
-    4: { flow: 'medium', symptoms: ['Cramps'] },
-    5: { flow: 'heavy', symptoms: ['Cramps', 'Fatigue'] },
-    6: { flow: 'medium', symptoms: ['Fatigue'] },
-    7: { flow: 'light', symptoms: [] },
+  const [cycleLogs, setCycleLogs] = useState(() => {
+    const saved = localStorage.getItem('femcare_cycle_logs');
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch (e) {
+        console.error("Error reading cycle logs from localStorage", e);
+      }
+    }
+    return {
+      '2026-06-03': { flow: 'light', symptoms: ['Fatigue'] },
+      '2026-06-04': { flow: 'medium', symptoms: ['Cramps'] },
+      '2026-06-05': { flow: 'heavy', symptoms: ['Cramps', 'Fatigue'] },
+      '2026-06-06': { flow: 'medium', symptoms: ['Fatigue'] },
+      '2026-06-07': { flow: 'light', symptoms: [] },
+      '2026-07-20': { flow: 'light', symptoms: ['Fatigue'] },
+      '2026-07-21': { flow: 'medium', symptoms: ['Cramps'] },
+      '2026-07-22': { flow: 'heavy', symptoms: ['Cramps', 'Fatigue'] }
+    };
   });
 
-  const [selectedDay, setSelectedDay] = useState(new Date().getDate());
+  const [currentDate, setCurrentDate] = useState(() => new Date(2026, 6, 1)); // July 2026
+  const [selectedDate, setSelectedDate] = useState(() => new Date(2026, 6, 25)); // July 25, 2026
+  
   const [waterGlasses, setWaterGlasses] = useState([true, true, true, false, false, false, false, false]); // 3/8 filled
   const [mood, setMood] = useState(7);
   const [energy, setEnergy] = useState(6);
@@ -54,29 +108,41 @@ export default function TrackingTools() {
   const { phase: currentPhase, color: badgeColorClass } = getPhaseAndColor(currentDayOfCycle);
   const progressPercent = ((currentDayOfCycle - 0.5) / 28) * 100;
 
+  useEffect(() => {
+    localStorage.setItem('femcare_cycle_logs', JSON.stringify(cycleLogs));
+  }, [cycleLogs]);
+
   const handleUpdateCycle = () => {
     setLastPeriodDate(tempInputDate);
     setCurrentDayOfCycle(calculateCycleDay(tempInputDate));
   };
 
-  // Month stats for June 2026 (Starts on Monday, 30 Days)
-  const daysInMonth = 30;
+  const handlePrevMonth = () => {
+    setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1));
+  };
+
+  const handleNextMonth = () => {
+    setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1));
+  };
+
   const weekDays = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
 
   const handleDayClick = (day) => {
-    setSelectedDay(day);
+    setSelectedDate(new Date(currentDate.getFullYear(), currentDate.getMonth(), day));
   };
 
   const logFlow = (flowLevel) => {
-    const currentLog = cycleLogs[selectedDay] || { flow: 'none', symptoms: [] };
+    const dateKey = formatDateKey(selectedDate);
+    const currentLog = cycleLogs[dateKey] || { flow: 'none', symptoms: [] };
     setCycleLogs({
       ...cycleLogs,
-      [selectedDay]: { ...currentLog, flow: flowLevel }
+      [dateKey]: { ...currentLog, flow: flowLevel }
     });
   };
 
   const toggleSymptom = (symptom) => {
-    const currentLog = cycleLogs[selectedDay] || { flow: 'none', symptoms: [] };
+    const dateKey = formatDateKey(selectedDate);
+    const currentLog = cycleLogs[dateKey] || { flow: 'none', symptoms: [] };
     const hasSymptom = currentLog.symptoms.includes(symptom);
     const updatedSymptoms = hasSymptom
       ? currentLog.symptoms.filter(s => s !== symptom)
@@ -84,7 +150,7 @@ export default function TrackingTools() {
 
     setCycleLogs({
       ...cycleLogs,
-      [selectedDay]: { ...currentLog, symptoms: updatedSymptoms }
+      [dateKey]: { ...currentLog, symptoms: updatedSymptoms }
     });
   };
 
@@ -124,7 +190,7 @@ export default function TrackingTools() {
     return '⚡ High Energy';
   };
 
-  const activeDayLog = cycleLogs[selectedDay] || { flow: 'none', symptoms: [] };
+  const activeDayLog = cycleLogs[formatDateKey(selectedDate)] || { flow: 'none', symptoms: [] };
   const waterCount = waterGlasses.filter(Boolean).length;
 
   return (
@@ -235,8 +301,32 @@ export default function TrackingTools() {
         <div className="lg:col-span-5 space-y-6">
           <div className="bg-slate-900 border border-slate-800/80 rounded-3xl p-6 shadow-xl space-y-5">
             <div className="flex justify-between items-center">
-              <h3 className="font-semibold text-slate-200 text-sm uppercase tracking-wider">June 2026 Log</h3>
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={handlePrevMonth}
+                  className="w-8 h-8 rounded-xl bg-slate-800 hover:bg-slate-750 text-slate-200 flex items-center justify-center cursor-pointer transition-colors"
+                  title="Previous Month"
+                >
+                  &lt;
+                </button>
+                <h3 className="font-semibold text-slate-200 text-xs sm:text-sm uppercase tracking-wider">
+                  {currentDate.toLocaleDateString('en-US', { month: 'short', year: 'numeric' })} Log
+                </h3>
+                <button
+                  onClick={handleNextMonth}
+                  className="w-8 h-8 rounded-xl bg-slate-800 hover:bg-slate-750 text-slate-200 flex items-center justify-center cursor-pointer transition-colors"
+                  title="Next Month"
+                >
+                  &gt;
+                </button>
+              </div>
               <span className="text-[10px] text-pink-400 font-semibold bg-pink-950/40 px-2 py-0.5 rounded-full border border-pink-900/30">Active Cycle Log</span>
+            </div>
+
+            {/* Prediction Banner */}
+            <div className="bg-pink-950/30 border border-pink-900/40 text-pink-300 text-[11px] px-3.5 py-2.5 rounded-xl font-medium flex items-center gap-2">
+              <span className="text-sm">🔮</span>
+              <span>{formatPredictionWindow(lastPeriodDate)}</span>
             </div>
 
             {/* Calendar grid */}
@@ -247,30 +337,70 @@ export default function TrackingTools() {
                 ))}
               </div>
               <div className="grid grid-cols-7 gap-2">
-                {Array.from({ length: daysInMonth }).map((_, idx) => {
-                  const day = idx + 1;
-                  const log = cycleLogs[day];
-                  const isSelected = selectedDay === day;
-                  const flowClass = log ? getFlowColor(log.flow) : '';
+                {(() => {
+                  const year = currentDate.getFullYear();
+                  const month = currentDate.getMonth();
+                  const firstDayOfMonth = new Date(year, month, 1);
+                  const totalDaysInMonth = new Date(year, month + 1, 0).getDate();
+                  const firstDayDayIndex = firstDayOfMonth.getDay();
+                  const startOffset = (firstDayDayIndex - 1 + 7) % 7;
 
                   return (
-                    <button
-                      key={day}
-                      onClick={() => handleDayClick(day)}
-                      className={`aspect-square text-xs rounded-xl flex items-center justify-center transition-all ${isSelected ? 'ring-2 ring-pink-500 font-bold text-white scale-105 z-10 shadow-lg shadow-pink-500/20' : ''
-                        } ${flowClass || 'hover:bg-slate-800 text-slate-400'}`}
-                    >
-                      {day}
-                    </button>
+                    <>
+                      {Array.from({ length: startOffset }).map((_, idx) => (
+                        <div key={`empty-${idx}`} className="aspect-square" />
+                      ))}
+                      {Array.from({ length: totalDaysInMonth }).map((_, idx) => {
+                        const day = idx + 1;
+                        const dateToCheck = new Date(year, month, day);
+                        const dateKey = formatDateKey(dateToCheck);
+                        const log = cycleLogs[dateKey];
+                        const isSelected = selectedDate.getFullYear() === year &&
+                                           selectedDate.getMonth() === month &&
+                                           selectedDate.getDate() === day;
+                        const isPredicted = isPredictedPeriodDay(dateToCheck, lastPeriodDate);
+                        const flowClass = log ? getFlowColor(log.flow) : '';
+
+                        let cellClass = "";
+                        if (flowClass) {
+                          cellClass = flowClass;
+                        } else if (isPredicted) {
+                          cellClass = "bg-pink-500/10 border border-dashed border-pink-500/40 text-pink-300 hover:bg-pink-500/20";
+                        } else {
+                          cellClass = "hover:bg-slate-800 text-slate-400";
+                        }
+
+                        return (
+                          <button
+                            key={day}
+                            onClick={() => handleDayClick(day)}
+                            className={`aspect-square text-xs rounded-xl flex items-center justify-center transition-all relative ${
+                              isSelected 
+                                ? 'ring-2 ring-pink-500 ring-offset-2 ring-offset-slate-950 shadow-md shadow-pink-500/30 scale-105 z-10 text-white font-bold' 
+                                : ''
+                            } ${cellClass}`}
+                          >
+                            <span className="relative">
+                              {day}
+                              {isPredicted && (
+                                <span className="absolute -top-1.5 -right-2 text-[8px]" title="Predicted Period Day">💧</span>
+                              )}
+                            </span>
+                          </button>
+                        );
+                      })}
+                    </>
                   );
-                })}
+                })()}
               </div>
             </div>
 
             {/* Selected Day Status Input Area */}
             <div className="bg-slate-950/40 border border-slate-850 rounded-2xl p-4 space-y-4">
               <div className="text-xs font-semibold text-slate-300">
-                Log Details for <span className="text-pink-400">June {selectedDay}</span>
+                Log Details for <span className="text-pink-400">
+                  {selectedDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+                </span>
               </div>
 
               {/* Flow Selector */}
