@@ -34,7 +34,7 @@ function App() {
             <div className="absolute top-3 right-4 z-40">
               <button
                 onClick={() => setShowEmergency(true)}
-                className="bg-red-50 hover:bg-red-100 text-red-650 text-[11px] px-3 py-1.5 rounded-lg border border-red-200 font-semibold transition-all shadow-sm cursor-pointer active:scale-95"
+                className="bg-red-50 hover:bg-red-100 text-slate-800 text-[11px] px-3 py-1.5 rounded-lg border border-red-200 font-semibold transition-all shadow-sm cursor-pointer active:scale-95"
               >
                 Test Safety Trigger 🚨
               </button>
