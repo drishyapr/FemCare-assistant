@@ -1,4 +1,4 @@
-import React from 'react';
+
 
 export default function EmergencyAlert({ isVisible, onClose }) {
   if (!isVisible) return null;

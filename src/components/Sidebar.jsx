@@ -1,8 +1,8 @@
-import React from 'react';
+
 
 export default function Sidebar({ isCollapsed, onToggleCollapse, activeView, onChangeView }) {
   return (
-    <div className={`bg-slate-900 text-white flex flex-col h-screen p-4 border-r border-slate-800 transition-all duration-300 ease-in-out relative ${
+    <div className={`bg-slate-900 text-white flex flex-col h-screen flex-shrink-0 p-4 border-r border-slate-800 transition-all duration-300 ease-in-out relative ${
       isCollapsed ? 'w-16' : 'w-64'
     }`}>
       {/* Collapse Toggle Button */}
