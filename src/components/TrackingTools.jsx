@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 export default function TrackingTools() {
   // Cycle logs: { [day]: { flow: 'none'|'light'|'medium'|'heavy', symptoms: [] } }
@@ -99,6 +99,87 @@ export default function TrackingTools() {
           </div>
         )}
       </header>
+
+      {/* Cycle Phase Visualizer Card */}
+      <div className="bg-white text-slate-800 border border-slate-200 rounded-3xl p-6 shadow-xl mt-8">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-6">
+          <div>
+            <h3 className="text-lg font-bold text-slate-900 tracking-wide">Cycle Phase Visualizer</h3>
+            <p className="text-xs text-slate-500 mt-0.5">Understand your current phase and physiological cycle rhythm</p>
+          </div>
+          
+          {/* Last Period Start Date & Update Button */}
+          <div className="flex flex-wrap items-end gap-3 w-full md:w-auto">
+            <div className="flex flex-col space-y-1">
+              <label className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Last Period Start Date</label>
+              <input 
+                type="date" 
+                defaultValue="2026-07-16" 
+                className="bg-slate-50 border border-slate-200 text-slate-800 text-xs rounded-xl px-3.5 py-2.5 focus:ring-2 focus:ring-pink-400 focus:outline-none transition-all shadow-inner"
+              />
+            </div>
+            <button 
+              type="button" 
+              onClick={(e) => e.preventDefault()}
+              className="bg-slate-900 hover:bg-slate-800 text-white font-semibold text-xs px-4 py-3 rounded-xl transition-all shadow-md active:scale-95 cursor-pointer"
+            >
+              Update Cycle
+            </button>
+          </div>
+        </div>
+
+        {/* Visual Progress Bar Section */}
+        <div className="space-y-6 relative pt-6">
+          {/* Floating Indicator Badge pointing to Follicular (Day 9) */}
+          <div className="absolute top-[-8px] left-[30.3%] -translate-x-1/2 z-10 flex flex-col items-center">
+            <div className="bg-purple-600 text-white text-[10px] font-bold px-3 py-1 rounded-full shadow-lg shadow-purple-200/50 flex items-center gap-1.5 border border-purple-500 whitespace-nowrap">
+              <span className="w-1.5 h-1.5 rounded-full bg-white inline-block animate-ping"></span>
+              Current Phase: Follicular (Day 9)
+            </div>
+            <div className="w-2 h-2 bg-purple-600 rotate-45 -mt-1 shadow-sm"></div>
+          </div>
+
+          {/* Color Coded Bar Segments */}
+          <div className="w-full h-3.5 rounded-full overflow-hidden bg-slate-100 flex shadow-inner border border-slate-200/60">
+            {/* Menstrual Phase */}
+            <div className="flex-[5] bg-pink-400 hover:opacity-90 transition-opacity cursor-pointer relative group" title="Menstrual Phase: Days 1-5">
+              <div className="absolute inset-0 bg-gradient-to-r from-pink-500/10 to-transparent"></div>
+            </div>
+            {/* Follicular Phase */}
+            <div className="flex-[8] bg-purple-400 hover:opacity-90 transition-opacity cursor-pointer relative group" title="Follicular Phase: Days 6-13">
+              <div className="absolute inset-0 bg-gradient-to-r from-purple-500/10 to-transparent"></div>
+            </div>
+            {/* Ovulatory Phase */}
+            <div className="flex-[2] bg-emerald-400 hover:opacity-90 transition-opacity cursor-pointer relative group" title="Ovulatory Phase: Days 14-15">
+              <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/10 to-transparent"></div>
+            </div>
+            {/* Luteal Phase */}
+            <div className="flex-[13] bg-amber-400 hover:opacity-90 transition-opacity cursor-pointer relative group" title="Luteal Phase: Days 16-28">
+              <div className="absolute inset-0 bg-gradient-to-r from-amber-500/10 to-transparent"></div>
+            </div>
+          </div>
+
+          {/* Grid Labels & Day Ranges */}
+          <div className="grid grid-cols-4 gap-3 text-center text-xs">
+            <div className="bg-pink-50/50 rounded-2xl p-3 border border-pink-100/40">
+              <span className="font-semibold text-pink-700 block">Menstrual</span>
+              <span className="text-[10px] text-pink-500">Days 1-5</span>
+            </div>
+            <div className="bg-purple-50/50 rounded-2xl p-3 border border-purple-100/40">
+              <span className="font-semibold text-purple-700 block">Follicular</span>
+              <span className="text-[10px] text-purple-500">Days 6-13</span>
+            </div>
+            <div className="bg-emerald-50/50 rounded-2xl p-3 border border-emerald-100/40">
+              <span className="font-semibold text-emerald-700 block">Ovulatory</span>
+              <span className="text-[10px] text-emerald-500">Days 14-15</span>
+            </div>
+            <div className="bg-amber-50/50 rounded-2xl p-3 border border-amber-100/40">
+              <span className="font-semibold text-amber-700 block">Luteal</span>
+              <span className="text-[10px] text-amber-500">Days 16-28</span>
+            </div>
+          </div>
+        </div>
+      </div>
 
       {/* Grid Dashboard Layout */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mt-8 flex-1">
