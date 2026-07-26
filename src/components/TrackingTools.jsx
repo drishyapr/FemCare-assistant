@@ -165,6 +165,26 @@ export default function TrackingTools() {
     setTimeout(() => setSaveSuccess(false), 2500);
   };
 
+  const handleExportData = () => {
+    const exportPayload = {
+      timestamp: new Date().toISOString(),
+      cycleLogs,
+      waterGlasses,
+      mood,
+      energy,
+      lastPeriodDate,
+    };
+    const blob = new Blob([JSON.stringify(exportPayload, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'femcare_wellness_backup.json';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
   const getFlowColor = (flow) => {
     switch (flow) {
       case 'heavy': return 'bg-rose-500 text-white font-bold ring-2 ring-rose-300';
@@ -198,7 +218,18 @@ export default function TrackingTools() {
       {/* Header Panel */}
       <header className="flex flex-col md:flex-row justify-between items-start md:items-center pb-6 border-b border-slate-800 gap-4">
         <div>
-          <h2 className="text-2xl font-bold tracking-wide text-slate-200">Wellness & Cycle Analytics</h2>
+          <div className="flex flex-wrap items-center gap-3">
+            <h2 className="text-2xl font-bold tracking-wide text-slate-200">Wellness & Cycle Analytics</h2>
+            <button
+              onClick={handleExportData}
+              className="bg-slate-900 border border-slate-800 hover:border-pink-500/40 text-slate-300 hover:text-white px-3 py-2 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5 cursor-pointer"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-3.5 h-3.5">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
+              </svg>
+              Export Data
+            </button>
+          </div>
           <p className="text-xs text-slate-400 mt-1">Private client-side wellness log & cyclical pattern tracker</p>
         </div>
 
@@ -361,14 +392,11 @@ export default function TrackingTools() {
                         const isPredicted = isPredictedPeriodDay(dateToCheck, lastPeriodDate);
                         const flowClass = log ? getFlowColor(log.flow) : '';
 
-                        let cellClass = "";
-                        if (flowClass) {
-                          cellClass = flowClass;
-                        } else if (isPredicted) {
-                          cellClass = "bg-pink-500/10 border border-dashed border-pink-500/40 text-pink-300 hover:bg-pink-500/20";
-                        } else {
-                          cellClass = "hover:bg-slate-800 text-slate-400";
-                        }
+                        const cellClass = flowClass
+                          ? flowClass
+                          : isPredicted
+                          ? "bg-pink-500/10 border border-dashed border-pink-500/40 text-pink-300 hover:bg-pink-500/20"
+                          : "hover:bg-slate-800 text-slate-400";
 
                         return (
                           <button
