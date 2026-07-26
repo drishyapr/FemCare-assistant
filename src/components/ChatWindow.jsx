@@ -94,6 +94,7 @@ export default function ChatWindow({ onShowEmergency }) {
     if (!textToSend || !textToSend.trim()) return;
 
     const userMessage = {
+      // eslint-disable-next-line react-hooks/purity
       id: Date.now(),
       sender: 'user',
       text: textToSend.trim()
@@ -127,6 +128,34 @@ export default function ChatWindow({ onShowEmergency }) {
       setMessages((prev) => [...prev, assistantMessage]);
       setIsThinking(false);
     }, 1000);
+  };
+
+  const handleDownloadChat = () => {
+    const formattedText = messages.map(msg => {
+      let date;
+      if (msg.id && msg.id > 100000000000) {
+        date = new Date(msg.id);
+      } else {
+        date = new Date();
+      }
+      const dateStr = date.toISOString().split('T')[0];
+      const senderLabel = msg.sender === 'user' ? 'User' : 'FemCare Assistant';
+      let line = `[${dateStr}] ${senderLabel}: ${msg.text}`;
+      if (msg.citation) {
+        line += ` (Source: ${msg.citation})`;
+      }
+      return line;
+    }).join('\n');
+
+    const blob = new Blob([formattedText], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'femcare_chat_history.txt';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
   };
 
   const handleClearChat = () => {
@@ -170,6 +199,15 @@ export default function ChatWindow({ onShowEmergency }) {
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block animate-pulse"></span>
             Session Saved
           </div>
+          <button
+            onClick={handleDownloadChat}
+            className="bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-300 hover:text-white px-3 py-1.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5 cursor-pointer shadow-sm flex-shrink-0"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.8} stroke="currentColor" className="w-3.5 h-3.5">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
+            </svg>
+            Download Chat
+          </button>
           <button
             onClick={handleClearChat}
             className="flex items-center gap-1.5 px-3.5 py-1.5 bg-slate-900 border border-slate-800 text-slate-300 hover:text-rose-400 hover:border-rose-500/40 rounded-xl text-xs font-medium transition-all duration-200 cursor-pointer shadow-sm flex-shrink-0"
