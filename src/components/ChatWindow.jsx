@@ -105,9 +105,35 @@ export default function ChatWindow({ onShowEmergency }) {
     setIsThinking(true);
 
     setTimeout(() => {
-      let matchedChunk = null;
       const query = textToSend.toLowerCase();
-      
+
+      // Crisis Safety Red-Flag Keywords check
+      const RED_FLAG_KEYWORDS = [
+        "severe bleeding",
+        "soaking through pads",
+        "excruciating pain",
+        "fainting",
+        "dizziness",
+        "sudden sharp pain",
+        "high fever",
+        "emergency"
+      ];
+      const hasRedFlag = RED_FLAG_KEYWORDS.some(keyword => query.includes(keyword));
+
+      if (hasRedFlag) {
+        const emergencyMessage = {
+          id: Date.now() + 1,
+          sender: 'assistant',
+          isEmergency: true,
+          text: `URGENT MEDICAL ADVISORY: Based on your message, you may be experiencing symptoms that require prompt clinical evaluation.\n\nRecommended Action Steps:\n- Seek immediate professional medical attention.\n- Go to the nearest Urgent Care facility or Emergency Room (ER).\n- Do not delay seeking care.\n\nIf you are in severe distress, please call 911 (or your local emergency services hotline) immediately.`,
+          citation: "FemCare Safety Protocol"
+        };
+        setMessages((prev) => [...prev, emergencyMessage]);
+        setIsThinking(false);
+        return;
+      }
+
+      let matchedChunk = null;
       for (const chunk of KNOWLEDGE_BASE) {
         if (chunk.topics.some(topic => query.includes(topic))) {
           matchedChunk = chunk;
@@ -228,10 +254,33 @@ export default function ChatWindow({ onShowEmergency }) {
               <div className={`rounded-2xl p-4 shadow-sm leading-relaxed text-sm whitespace-pre-line ${
                 message.sender === 'user'
                   ? 'bg-pink-600 text-white'
+                  : message.isEmergency
+                  ? 'bg-red-50 border-2 border-red-500 text-red-950 font-medium'
                   : 'bg-slate-50 border border-slate-200/80 text-slate-700'
               }`}>
                 {message.sender === 'assistant' && message.id === 1 ? (
                   <span>Welcome to the <strong className="text-pink-650">FemCare RAG Assistant</strong>. Ask me any women's health question.</span>
+                ) : message.isEmergency ? (
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-2 text-red-700 font-bold">
+                      <span className="text-xl">🚨</span>
+                      <span>URGENT MEDICAL ADVISORY</span>
+                    </div>
+                    <p className="text-red-900 leading-relaxed font-semibold">
+                      Based on your message, you may be experiencing symptoms that require prompt clinical evaluation.
+                    </p>
+                    <div className="bg-white/60 rounded-xl p-3 border border-red-200 text-xs text-red-950 space-y-2">
+                      <p className="font-semibold text-[13px]">Recommended Action Steps:</p>
+                      <ul className="list-disc pl-4 space-y-1">
+                        <li>Seek immediate professional medical attention.</li>
+                        <li>Go to the nearest Urgent Care facility or Emergency Room (ER).</li>
+                        <li>Do not delay seeking care based on information provided here.</li>
+                      </ul>
+                    </div>
+                    <div className="text-red-800 text-[11px] font-bold mt-1 bg-red-100/40 p-2.5 rounded-lg border border-red-200/50">
+                      📞 If you are in severe distress, please call 911 (or your local emergency services hotline) immediately.
+                    </div>
+                  </div>
                 ) : (
                   message.text
                 )}
