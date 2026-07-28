@@ -70,6 +70,48 @@ const formatPredictionWindow = (lastDateStr) => {
   return `Predicted Next Period: ${startStr} – ${endStr}`;
 };
 
+const getOvulationDate = (lastDateStr) => {
+  const nextPeriod = getNextPeriodStartDate(lastDateStr);
+  if (!nextPeriod) return null;
+  const ovulation = new Date(nextPeriod);
+  ovulation.setDate(nextPeriod.getDate() - 14);
+  return ovulation;
+};
+
+const isOvulationDay = (dateToCheck, lastDateStr) => {
+  const ovulation = getOvulationDate(lastDateStr);
+  if (!ovulation) return false;
+  return dateToCheck.getFullYear() === ovulation.getFullYear() &&
+         dateToCheck.getMonth() === ovulation.getMonth() &&
+         dateToCheck.getDate() === ovulation.getDate();
+};
+
+const isFertileDay = (dateToCheck, lastDateStr) => {
+  const ovulation = getOvulationDate(lastDateStr);
+  if (!ovulation) return false;
+  const startFertile = new Date(ovulation);
+  startFertile.setDate(ovulation.getDate() - 5);
+  
+  const checkTime = new Date(dateToCheck.getFullYear(), dateToCheck.getMonth(), dateToCheck.getDate()).getTime();
+  const startTime = new Date(startFertile.getFullYear(), startFertile.getMonth(), startFertile.getDate()).getTime();
+  const endTime = new Date(ovulation.getFullYear(), ovulation.getMonth(), ovulation.getDate()).getTime();
+  
+  return checkTime >= startTime && checkTime <= endTime;
+};
+
+const formatFertilityWindow = (lastDateStr) => {
+  const ovulation = getOvulationDate(lastDateStr);
+  if (!ovulation) return "";
+  const startFertile = new Date(ovulation);
+  startFertile.setDate(ovulation.getDate() - 5);
+  
+  const startStr = startFertile.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  const endStr = ovulation.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  const peakStr = ovulation.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  
+  return `Estimated Fertile Window: ${startStr} – ${endStr} | Peak Ovulation: ${peakStr}`;
+};
+
 export default function TrackingTools() {
   const [cycleLogs, setCycleLogs] = useState(() => {
     const saved = localStorage.getItem('femcare_cycle_logs');
@@ -360,6 +402,12 @@ export default function TrackingTools() {
               <span>{formatPredictionWindow(lastPeriodDate)}</span>
             </div>
 
+            {/* Fertility Banner */}
+            <div className="bg-teal-950/30 border border-teal-900/40 text-teal-300 text-[11px] px-3.5 py-2.5 rounded-xl font-medium flex items-center gap-2">
+              <span className="text-sm">✨</span>
+              <span>{formatFertilityWindow(lastPeriodDate)}</span>
+            </div>
+
             {/* Calendar grid */}
             <div className="bg-slate-950/60 border border-slate-800/80 rounded-2xl p-4 shadow-inner">
               <div className="grid grid-cols-7 gap-2 text-center mb-2">
@@ -390,12 +438,18 @@ export default function TrackingTools() {
                                            selectedDate.getMonth() === month &&
                                            selectedDate.getDate() === day;
                         const isPredicted = isPredictedPeriodDay(dateToCheck, lastPeriodDate);
+                        const isOvulation = isOvulationDay(dateToCheck, lastPeriodDate);
+                        const isFertile = isFertileDay(dateToCheck, lastPeriodDate);
                         const flowClass = log ? getFlowColor(log.flow) : '';
 
                         const cellClass = flowClass
                           ? flowClass
                           : isPredicted
                           ? "bg-pink-500/10 border border-dashed border-pink-500/40 text-pink-300 hover:bg-pink-500/20"
+                          : isOvulation
+                          ? "bg-teal-500/20 border-2 border-teal-400 text-teal-300 font-bold shadow-md shadow-teal-500/10 hover:bg-teal-500/30"
+                          : isFertile
+                          ? "bg-teal-500/15 border border-teal-500/30 text-teal-300 hover:bg-teal-500/25"
                           : "hover:bg-slate-800 text-slate-400";
 
                         return (
@@ -413,6 +467,9 @@ export default function TrackingTools() {
                               {isPredicted && (
                                 <span className="absolute -top-1.5 -right-2 text-[8px]" title="Predicted Period Day">💧</span>
                               )}
+                              {isOvulation && (
+                                <span className="absolute -top-1.5 -right-2 text-[8px]" title="Peak Ovulation Day">⭐</span>
+                              )}
                             </span>
                           </button>
                         );
@@ -420,6 +477,26 @@ export default function TrackingTools() {
                     </>
                   );
                 })()}
+              </div>
+
+              {/* Calendar Legend */}
+              <div className="flex flex-wrap items-center justify-between gap-2 px-1 pt-4 mt-4 border-t border-slate-800/80 text-[10px] text-slate-400">
+                <div className="flex items-center gap-1.5">
+                  <span className="w-2.5 h-2.5 rounded bg-pink-500 inline-block"></span>
+                  <span>Logged Period</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <span className="w-2.5 h-2.5 rounded border border-dashed border-pink-500 bg-pink-500/10 inline-block"></span>
+                  <span>Predicted Period</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <span className="w-2.5 h-2.5 rounded bg-teal-500/20 border border-teal-500/30 inline-block"></span>
+                  <span>Fertile Window</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <span className="text-teal-400 text-[10px]">⭐</span>
+                  <span>Ovulation Day</span>
+                </div>
               </div>
             </div>
 
