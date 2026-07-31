@@ -143,9 +143,16 @@ export default function TrackingTools() {
   const [saveSuccess, setSaveSuccess] = useState(false);
 
   // Cycle Phase Visualizer State and Logic
-  const [lastPeriodDate, setLastPeriodDate] = useState(tenDaysAgoDefault);
-  const [currentDayOfCycle, setCurrentDayOfCycle] = useState(() => calculateCycleDay(tenDaysAgoDefault));
-  const [tempInputDate, setTempInputDate] = useState(tenDaysAgoDefault);
+  const [lastPeriodDate, setLastPeriodDate] = useState(() => {
+    return localStorage.getItem('femcare_last_period_date') || tenDaysAgoDefault;
+  });
+  const [currentDayOfCycle, setCurrentDayOfCycle] = useState(() => {
+    const saved = localStorage.getItem('femcare_last_period_date') || tenDaysAgoDefault;
+    return calculateCycleDay(saved);
+  });
+  const [tempInputDate, setTempInputDate] = useState(() => {
+    return localStorage.getItem('femcare_last_period_date') || tenDaysAgoDefault;
+  });
 
   const { phase: currentPhase, color: badgeColorClass } = getPhaseAndColor(currentDayOfCycle);
   const progressPercent = ((currentDayOfCycle - 0.5) / 28) * 100;
@@ -153,6 +160,10 @@ export default function TrackingTools() {
   useEffect(() => {
     localStorage.setItem('femcare_cycle_logs', JSON.stringify(cycleLogs));
   }, [cycleLogs]);
+
+  useEffect(() => {
+    localStorage.setItem('femcare_last_period_date', lastPeriodDate);
+  }, [lastPeriodDate]);
 
   const handleUpdateCycle = () => {
     setLastPeriodDate(tempInputDate);

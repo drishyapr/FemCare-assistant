@@ -54,6 +54,64 @@ const FALLBACK_CHUNK = {
   source: "Grounded Clinical Consensus Manual"
 };
 
+const tenDaysAgoDefault = new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+
+const calculateCycleDay = (dateStr) => {
+  if (!dateStr) return 1;
+  const [year, month, day] = dateStr.split('-').map(Number);
+  const start = new Date(year, month - 1, day);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const diffTime = today - start;
+  const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+  if (diffDays < 0) return 1;
+  return (diffDays % 28) + 1;
+};
+
+const getPhaseAndColor = (day) => {
+  if (day >= 1 && day <= 5) {
+    return { phase: 'Menstrual', color: '#db2777' };
+  } else if (day >= 6 && day <= 13) {
+    return { phase: 'Follicular', color: '#7c3aed' };
+  } else if (day >= 14 && day <= 17) {
+    return { phase: 'Ovulatory', color: '#059669' };
+  } else {
+    return { phase: 'Luteal', color: '#d97706' };
+  }
+};
+
+const getNextPeriodStartDate = (lastDateStr) => {
+  if (!lastDateStr) return null;
+  const [year, month, day] = lastDateStr.split('-').map(Number);
+  const date = new Date(year, month - 1, day);
+  date.setDate(date.getDate() + 28);
+  return date;
+};
+
+const formatPredictionWindow = (lastDateStr) => {
+  const start = getNextPeriodStartDate(lastDateStr);
+  if (!start) return "N/A";
+  const end = new Date(start);
+  end.setDate(start.getDate() + 4);
+  const startStr = start.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  const endStr = end.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  return `${startStr} – ${endStr}`;
+};
+
+const formatFertilityWindow = (lastDateStr) => {
+  const nextPeriod = getNextPeriodStartDate(lastDateStr);
+  if (!nextPeriod) return "N/A";
+  const ovulation = new Date(nextPeriod);
+  ovulation.setDate(nextPeriod.getDate() - 14);
+  const startFertile = new Date(ovulation);
+  startFertile.setDate(ovulation.getDate() - 5);
+  
+  const startStr = startFertile.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  const endStr = ovulation.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  const peakStr = ovulation.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  return `${startStr} – ${endStr} (Peak: ${peakStr})`;
+};
+
 export default function ChatWindow({ onShowEmergency }) {
   const suggestions = [
     "What are common symptoms of iron deficiency?",
@@ -156,32 +214,368 @@ export default function ChatWindow({ onShowEmergency }) {
     }, 1000);
   };
 
-  const handleDownloadChat = () => {
-    const formattedText = messages.map(msg => {
-      let date;
-      if (msg.id && msg.id > 100000000000) {
-        date = new Date(msg.id);
-      } else {
-        date = new Date();
+  const handleGeneratePDF = () => {
+    const lastPeriodDate = localStorage.getItem('femcare_last_period_date') || tenDaysAgoDefault;
+    
+    let cycleLogs = {};
+    const savedLogs = localStorage.getItem('femcare_cycle_logs');
+    if (savedLogs) {
+      try {
+        cycleLogs = JSON.parse(savedLogs);
+      } catch (e) {
+        console.error("Error loading cycle logs", e);
       }
-      const dateStr = date.toISOString().split('T')[0];
-      const senderLabel = msg.sender === 'user' ? 'User' : 'FemCare Assistant';
-      let line = `[${dateStr}] ${senderLabel}: ${msg.text}`;
-      if (msg.citation) {
-        line += ` (Source: ${msg.citation})`;
-      }
-      return line;
-    }).join('\n');
+    }
 
-    const blob = new Blob([formattedText], { type: 'text/plain;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = 'femcare_chat_history.txt';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
+    const cycleDay = calculateCycleDay(lastPeriodDate);
+    const phaseInfo = getPhaseAndColor(cycleDay);
+    const nextPeriodStr = formatPredictionWindow(lastPeriodDate);
+    const fertilityStr = formatFertilityWindow(lastPeriodDate);
+
+    const dateGenerated = new Date().toLocaleString('en-US', {
+      weekday: 'short',
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      timeZoneName: 'short'
+    });
+
+    const sortedLogDates = Object.keys(cycleLogs).sort((a, b) => new Date(b) - new Date(a));
+    let symptomsTableHTML = '';
+    if (sortedLogDates.length === 0) {
+      symptomsTableHTML = `<p class="no-logs">No symptoms or flow levels logged in this cycle.</p>`;
+    } else {
+      symptomsTableHTML = `
+        <table>
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Flow Intensity</th>
+              <th>Logged Symptoms</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${sortedLogDates.map(dateKey => {
+              const entry = cycleLogs[dateKey];
+              const flow = entry.flow || 'none';
+              const symptoms = entry.symptoms && entry.symptoms.length > 0 
+                ? entry.symptoms.join(', ') 
+                : 'None';
+              return `
+                <tr>
+                  <td><strong>${dateKey}</strong></td>
+                  <td><span class="flow-badge flow-${flow}">${flow}</span></td>
+                  <td>${symptoms}</td>
+                </tr>
+              `;
+            }).join('')}
+          </tbody>
+        </table>
+      `;
+    }
+
+    const chatHTML = messages.map(msg => {
+      const isUser = msg.sender === 'user';
+      const senderLabel = isUser ? 'Patient' : 'Clinical Assistant';
+      const bubbleClass = isUser ? 'msg-user' : 'msg-assistant';
+      const citationHTML = (!isUser && msg.citation) 
+        ? `<div class="citation">Source: ${msg.citation}</div>` 
+        : '';
+      return `
+        <div class="message-block ${bubbleClass}">
+          <div class="msg-header">${senderLabel}</div>
+          <div class="msg-text">${msg.text}</div>
+          ${citationHTML}
+        </div>
+      `;
+    }).join('');
+
+    const reportHTML = `
+      <!DOCTYPE html>
+      <html lang="en">
+      <head>
+        <meta charset="UTF-8">
+        <title>FemCare Clinical Summary Report</title>
+        <style>
+          body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            color: #334155;
+            line-height: 1.5;
+            margin: 0;
+            padding: 40px;
+            background-color: #ffffff;
+          }
+          
+          .report-header {
+            border-bottom: 2px solid #db2777;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+          }
+          .header-main {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+          }
+          .title-container h1 {
+            color: #1e293b;
+            font-size: 24px;
+            margin: 0;
+            font-weight: 800;
+            letter-spacing: -0.025em;
+          }
+          .title-container p {
+            color: #db2777;
+            font-size: 14px;
+            margin: 4px 0 0 0;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+          }
+          .meta-info {
+            text-align: right;
+            font-size: 12px;
+            color: #64748b;
+          }
+          
+          h2.section-title {
+            font-size: 16px;
+            color: #0f172a;
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 6px;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: 700;
+          }
+          
+          .grid-summary {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin-bottom: 20px;
+          }
+          .metric-card {
+            background-color: #f8fafc;
+            border: 1px solid #f1f5f9;
+            border-radius: 12px;
+            padding: 14px 16px;
+          }
+          .metric-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            color: #64748b;
+            font-weight: 600;
+            margin-bottom: 4px;
+          }
+          .metric-value {
+            font-size: 15px;
+            font-weight: 700;
+            color: #0f172a;
+          }
+          .phase-badge {
+            display: inline-block;
+            padding: 2px 10px;
+            border-radius: 9999px;
+            color: #ffffff;
+            font-size: 12px;
+            font-weight: 700;
+          }
+          
+          table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            font-size: 13px;
+          }
+          th, td {
+            text-align: left;
+            padding: 10px 12px;
+            border-bottom: 1px solid #e2e8f0;
+          }
+          th {
+            background-color: #f8fafc;
+            font-weight: 600;
+            color: #475569;
+          }
+          .flow-badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: capitalize;
+          }
+          .flow-none { background-color: #f1f5f9; color: #64748b; }
+          .flow-light { background-color: #fce7f3; color: #db2777; }
+          .flow-medium { background-color: #fbcfe8; color: #be185d; }
+          .flow-heavy { background-color: #f9a8d4; color: #9d174d; }
+          
+          .no-logs {
+            font-size: 13px;
+            color: #64748b;
+            font-style: italic;
+          }
+          
+          .chat-summary {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+          }
+          .message-block {
+            padding: 12px 16px;
+            border-radius: 12px;
+            font-size: 13px;
+            page-break-inside: avoid;
+          }
+          .msg-user {
+            background-color: #fff5f7;
+            border-left: 4px solid #db2777;
+          }
+          .msg-assistant {
+            background-color: #f8fafc;
+            border-left: 4px solid #475569;
+          }
+          .msg-header {
+            font-weight: 700;
+            font-size: 11px;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+            color: #475569;
+          }
+          .msg-user .msg-header {
+            color: #be185d;
+          }
+          .msg-text {
+            color: #1e293b;
+            white-space: pre-wrap;
+          }
+          .citation {
+            margin-top: 6px;
+            font-size: 10px;
+            font-weight: 600;
+            color: #059669;
+            background-color: #ecfdf5;
+            display: inline-block;
+            padding: 2px 6px;
+            border-radius: 4px;
+          }
+          
+          .report-footer {
+            margin-top: 50px;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 16px;
+            text-align: center;
+            font-size: 11px;
+            color: #94a3b8;
+            font-weight: 500;
+            letter-spacing: 0.025em;
+            page-break-inside: avoid;
+          }
+
+          @media print {
+            body {
+              padding: 20px;
+            }
+            .metric-card {
+              background-color: #ffffff !important;
+              border: 1px solid #cbd5e1 !important;
+            }
+            .flow-badge {
+              border: 1px solid #cbd5e1 !important;
+            }
+            .flow-none { background-color: #ffffff !important; color: #475569 !important; }
+            .flow-light { background-color: #ffffff !important; color: #db2777 !important; }
+            .flow-medium { background-color: #ffffff !important; color: #be185d !important; }
+            .flow-heavy { background-color: #ffffff !important; color: #9d174d !important; }
+            
+            .msg-user {
+              background-color: #ffffff !important;
+              border: 1px solid #e2e8f0 !important;
+              border-left: 4px solid #db2777 !important;
+            }
+            .msg-assistant {
+              background-color: #ffffff !important;
+              border: 1px solid #e2e8f0 !important;
+              border-left: 4px solid #475569 !important;
+            }
+          }
+        </style>
+      </head>
+      <body>
+        <div class="report-header">
+          <div class="header-main">
+            <div class="title-container">
+              <h1>FemCare Patient Health & Cycle Summary Report</h1>
+              <p>Clinical Reference Summary</p>
+            </div>
+            <div class="meta-info">
+              <div><strong>Generated:</strong> ${dateGenerated}</div>
+              <div><strong>System Baseline:</strong> Active</div>
+            </div>
+          </div>
+        </div>
+
+        <h2 class="section-title">Current Cycle Status</h2>
+        <div class="grid-summary">
+          <div class="metric-card">
+            <div class="metric-label">Last Period Start Date</div>
+            <div class="metric-value">${lastPeriodDate}</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">Current Cycle Day & Phase</div>
+            <div class="metric-value">
+              Day ${cycleDay} &nbsp;•&nbsp; 
+              <span class="phase-badge" style="background-color: ${phaseInfo.color};">${phaseInfo.phase}</span>
+            </div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">Estimated Next Period</div>
+            <div class="metric-value">${nextPeriodStr}</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">Fertile Window Prediction</div>
+            <div class="metric-value">${fertilityStr}</div>
+          </div>
+        </div>
+
+        <h2 class="section-title">Symptom Log Overview</h2>
+        ${symptomsTableHTML}
+
+        <h2 class="section-title">Chat Q&A Summary</h2>
+        <div class="chat-summary">
+          ${chatHTML}
+        </div>
+
+        <div class="report-footer">
+          Generated for Clinical Review with Healthcare Provider &bull; FemCare RAG Secure Assistant
+        </div>
+      </body>
+      </html>
+    `;
+
+    const printWindow = window.open("", "_blank");
+    if (printWindow) {
+      printWindow.document.write(reportHTML);
+      printWindow.document.close();
+      
+      printWindow.onload = () => {
+        printWindow.focus();
+        printWindow.print();
+      };
+      
+      setTimeout(() => {
+        if (printWindow.document.readyState === 'complete') {
+          printWindow.focus();
+          printWindow.print();
+        }
+      }, 500);
+    } else {
+      alert("Please allow popups to generate and print the clinical summary PDF.");
+    }
   };
 
   const handleClearChat = () => {
@@ -226,13 +620,13 @@ export default function ChatWindow({ onShowEmergency }) {
             Session Saved
           </div>
           <button
-            onClick={handleDownloadChat}
+            onClick={handleGeneratePDF}
             className="bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-300 hover:text-white px-3 py-1.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5 cursor-pointer shadow-sm flex-shrink-0"
           >
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.8} stroke="currentColor" className="w-3.5 h-3.5">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
+              <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
             </svg>
-            Download Chat
+            Generate Doctor PDF
           </button>
           <button
             onClick={handleClearChat}
