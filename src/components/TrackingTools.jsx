@@ -112,7 +112,7 @@ const formatFertilityWindow = (lastDateStr) => {
   return `Estimated Fertile Window: ${startStr} – ${endStr} | Peak Ovulation: ${peakStr}`;
 };
 
-export default function TrackingTools() {
+export default function TrackingTools({ onCrisisSOS }) {
   const [cycleLogs, setCycleLogs] = useState(() => {
     const saved = localStorage.getItem('femcare_cycle_logs');
     if (saved) {
@@ -273,6 +273,14 @@ export default function TrackingTools() {
         <div>
           <div className="flex flex-wrap items-center gap-3">
             <h2 className="text-2xl font-bold tracking-wide text-slate-200">Wellness & Cycle Analytics</h2>
+            {onCrisisSOS && (
+              <button
+                onClick={onCrisisSOS}
+                className="flex items-center gap-1.5 px-3 py-2 bg-red-650 hover:bg-red-750 text-white rounded-xl text-xs font-bold transition-all duration-200 cursor-pointer shadow-sm active:scale-95 flex-shrink-0 animate-pulse"
+              >
+                🚨 Crisis SOS
+              </button>
+            )}
             <button
               onClick={handleExportData}
               className="bg-slate-900 border border-slate-800 hover:border-pink-500/40 text-slate-300 hover:text-white px-3 py-2 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5 cursor-pointer"

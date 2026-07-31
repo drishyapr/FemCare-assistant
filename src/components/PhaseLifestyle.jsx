@@ -162,7 +162,7 @@ const PHASE_DETAILS = {
   }
 };
 
-export default function PhaseLifestyle() {
+export default function PhaseLifestyle({ onCrisisSOS }) {
   const [lastPeriodDate, setLastPeriodDate] = useState(() => {
     return localStorage.getItem('femcare_last_period_date') || tenDaysAgoDefault;
   });
@@ -186,7 +186,17 @@ export default function PhaseLifestyle() {
       {/* Header Panel */}
       <header className="flex flex-col pb-6 border-b border-slate-800 gap-2">
         <div className="flex items-center justify-between">
-          <h2 className="text-2xl font-bold tracking-wide text-slate-200">Phase-Synced Lifestyle Guide</h2>
+          <div className="flex items-center gap-3">
+            <h2 className="text-2xl font-bold tracking-wide text-slate-200">Phase-Synced Lifestyle Guide</h2>
+            {onCrisisSOS && (
+              <button
+                onClick={onCrisisSOS}
+                className="flex items-center gap-1.5 px-3 py-1.5 bg-red-650 hover:bg-red-750 text-white rounded-xl text-xs font-bold transition-all duration-200 cursor-pointer shadow-sm active:scale-95 flex-shrink-0 animate-pulse"
+              >
+                🚨 Crisis SOS
+              </button>
+            )}
+          </div>
           <span className="text-[10px] text-slate-400 font-semibold bg-slate-900 px-3.5 py-1.5 rounded-xl border border-slate-800 shadow-inner">
             Reflecting Cycle Start: {lastPeriodDate}
           </span>

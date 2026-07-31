@@ -112,7 +112,7 @@ const formatFertilityWindow = (lastDateStr) => {
   return `${startStr} – ${endStr} (Peak: ${peakStr})`;
 };
 
-export default function ChatWindow({ onShowEmergency }) {
+export default function ChatWindow({ onShowEmergency, onCrisisSOS }) {
   const suggestions = [
     "What are common symptoms of iron deficiency?",
     "Tell me about the follicular phase.",
@@ -607,6 +607,14 @@ export default function ChatWindow({ onShowEmergency }) {
 
         {/* Chat Memory & Safety Controls */}
         <div className="flex items-center gap-3">
+          {onCrisisSOS && (
+            <button
+              onClick={onCrisisSOS}
+              className="flex items-center gap-1.5 px-3.5 py-1.5 bg-red-650 hover:bg-red-750 text-white rounded-xl text-xs font-bold transition-all duration-200 cursor-pointer shadow-sm active:scale-95 flex-shrink-0 animate-pulse"
+            >
+              🚨 Crisis SOS
+            </button>
+          )}
           {onShowEmergency && (
             <button
               onClick={onShowEmergency}
