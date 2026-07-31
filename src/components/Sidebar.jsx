@@ -58,6 +58,20 @@ export default function Sidebar({ isCollapsed, onToggleCollapse, activeView, onC
             <span className="text-base">📊</span>
             {!isCollapsed && <span className="text-sm whitespace-nowrap overflow-hidden transition-all duration-300">Wellness Tracker</span>}
           </button>
+
+          {/* Phase & Lifestyle tab */}
+          <button
+            onClick={() => onChangeView('lifestyle')}
+            className={`w-full flex items-center rounded-xl font-medium transition-all cursor-pointer ${
+              activeView === 'lifestyle'
+                ? 'bg-gradient-to-r from-pink-955/40 to-rose-950/20 text-pink-300 border border-pink-900/40'
+                : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800 border border-transparent'
+            } ${isCollapsed ? 'justify-center p-2.5' : 'space-x-3 px-3 py-2.5'}`}
+            title="Phase & Lifestyle"
+          >
+            <span className="text-base">🌿</span>
+            {!isCollapsed && <span className="text-sm whitespace-nowrap overflow-hidden transition-all duration-300">Phase & Lifestyle</span>}
+          </button>
         </nav>
       </div>
 
