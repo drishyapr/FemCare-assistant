@@ -181,33 +181,34 @@ export default function MentalHealth() {
   }, [isAngerTimerRunning]);
 
   // Reset states on tab change to prevent running intervals
-  useEffect(() => {
-    if (activeTab !== 'panic') {
+  const handleTabChange = (tab) => {
+    setActiveTab(tab);
+    if (tab !== 'panic') {
       setIsBreathing(false);
       setBreathStepIdx(0);
       setBreathTimer(BREATH_STEPS[0].duration);
       setGroundingIdx(0);
     }
-    if (activeTab !== 'somatic') {
+    if (tab !== 'somatic') {
       setIsTapping(false);
       setTappingTimer(60);
     }
-    if (activeTab !== 'insomnia') {
+    if (tab !== 'insomnia') {
       setIsSleepBreathing(false);
       setSleepBreathStepIdx(0);
       setSleepBreathTimer(SLEEP_BREATH_STEPS[0].duration);
       setPmrStepIdx(0);
     }
-    if (activeTab !== 'anger') {
+    if (tab !== 'anger') {
       setIsAngerTimerRunning(false);
       setAngerCountdown(30);
     }
-    if (activeTab !== 'stress') {
+    if (tab !== 'stress') {
       setRacingThought('');
       setIsDissolving(false);
       setIsWorryScheduled(false);
     }
-  }, [activeTab]);
+  };
 
   const handleToggleAction = (id) => {
     setCompletedActions(prev => ({ ...prev, [id]: !prev[id] }));
@@ -260,7 +261,7 @@ export default function MentalHealth() {
   const strokeDashoffset = circumference - (angerCountdown / 30) * circumference;
 
   return (
-    <div className="flex-1 bg-slate-950 flex flex-col h-screen overflow-y-auto text-slate-100 p-8 select-none">
+    <div className="flex-1 bg-slate-950 flex flex-col h-full overflow-y-auto text-slate-100 p-8 select-none">
       
       {/* 1. Emergency Crisis Header Card */}
       <div className="bg-gradient-to-r from-red-950/40 to-rose-900/10 border border-red-900/40 rounded-3xl p-6 shadow-xl mb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 flex-shrink-0">
@@ -299,7 +300,7 @@ export default function MentalHealth() {
       {/* Workspace Menu Bar / Tabs */}
       <div className="flex border-b border-slate-800 gap-2 mb-6 overflow-x-auto scrollbar-none flex-nowrap flex-shrink-0">
         <button
-          onClick={() => setActiveTab('panic')}
+          onClick={() => handleTabChange('panic')}
           className={`px-5 py-3 font-semibold text-xs uppercase tracking-wider transition-all border-b-2 cursor-pointer flex-shrink-0 ${
             activeTab === 'panic'
               ? 'border-pink-500 text-pink-400 font-bold'
@@ -309,7 +310,7 @@ export default function MentalHealth() {
           🚨 Panic & Anxiety
         </button>
         <button
-          onClick={() => setActiveTab('depression')}
+          onClick={() => handleTabChange('depression')}
           className={`px-5 py-3 font-semibold text-xs uppercase tracking-wider transition-all border-b-2 cursor-pointer flex-shrink-0 ${
             activeTab === 'depression'
               ? 'border-purple-500 text-purple-400 font-bold'
@@ -319,7 +320,7 @@ export default function MentalHealth() {
           🌧️ Depression & Low Energy
         </button>
         <button
-          onClick={() => setActiveTab('somatic')}
+          onClick={() => handleTabChange('somatic')}
           className={`px-5 py-3 font-semibold text-xs uppercase tracking-wider transition-all border-b-2 cursor-pointer flex-shrink-0 ${
             activeTab === 'somatic'
               ? 'border-emerald-500 text-emerald-400 font-bold'
@@ -329,7 +330,7 @@ export default function MentalHealth() {
           ❄️ Physical Reset & Somatic
         </button>
         <button
-          onClick={() => setActiveTab('stress')}
+          onClick={() => handleTabChange('stress')}
           className={`px-5 py-3 font-semibold text-xs uppercase tracking-wider transition-all border-b-2 cursor-pointer flex-shrink-0 ${
             activeTab === 'stress'
               ? 'border-indigo-500 text-indigo-400 font-bold'
@@ -339,7 +340,7 @@ export default function MentalHealth() {
           🌀 Stress & Overthinking
         </button>
         <button
-          onClick={() => setActiveTab('insomnia')}
+          onClick={() => handleTabChange('insomnia')}
           className={`px-5 py-3 font-semibold text-xs uppercase tracking-wider transition-all border-b-2 cursor-pointer flex-shrink-0 ${
             activeTab === 'insomnia'
               ? 'border-teal-500 text-teal-400 font-bold'
@@ -349,7 +350,7 @@ export default function MentalHealth() {
           🌙 Insomnia & Night Anxiety
         </button>
         <button
-          onClick={() => setActiveTab('anger')}
+          onClick={() => handleTabChange('anger')}
           className={`px-5 py-3 font-semibold text-xs uppercase tracking-wider transition-all border-b-2 cursor-pointer flex-shrink-0 ${
             activeTab === 'anger'
               ? 'border-rose-500 text-rose-455 font-bold'

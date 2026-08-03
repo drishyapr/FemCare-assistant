@@ -182,7 +182,7 @@ export default function PhaseLifestyle({ onCrisisSOS }) {
   const details = PHASE_DETAILS[phaseKey];
 
   return (
-    <div className="flex-1 bg-slate-950 flex flex-col h-screen overflow-y-auto text-slate-100 p-8 select-none">
+    <div className="flex-1 bg-slate-950 flex flex-col h-full overflow-y-auto text-slate-100 p-8 select-none">
       {/* Header Panel */}
       <header className="flex flex-col pb-6 border-b border-slate-800 gap-2">
         <div className="flex items-center justify-between">

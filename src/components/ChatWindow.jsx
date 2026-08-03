@@ -244,7 +244,7 @@ export default function ChatWindow({ onShowEmergency, onCrisisSOS }) {
     });
 
     const sortedLogDates = Object.keys(cycleLogs).sort((a, b) => new Date(b) - new Date(a));
-    let symptomsTableHTML = '';
+    let symptomsTableHTML;
     if (sortedLogDates.length === 0) {
       symptomsTableHTML = `<p class="no-logs">No symptoms or flow levels logged in this cycle.</p>`;
     } else {
@@ -594,7 +594,7 @@ export default function ChatWindow({ onShowEmergency, onCrisisSOS }) {
   };
 
   return (
-    <div className="flex-1 flex flex-col h-screen overflow-hidden bg-white text-slate-800">
+    <div className="flex-1 flex flex-col h-full overflow-hidden bg-white text-slate-800">
       {/* Header */}
       <header className="h-16 border-b border-slate-200 bg-white flex items-center justify-between px-8 shadow-sm flex-shrink-0">
         <div>

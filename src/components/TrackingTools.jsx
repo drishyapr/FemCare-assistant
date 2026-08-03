@@ -267,7 +267,7 @@ export default function TrackingTools({ onCrisisSOS }) {
   const waterCount = waterGlasses.filter(Boolean).length;
 
   return (
-    <div className="flex-1 bg-slate-950 flex flex-col h-screen overflow-y-auto text-slate-100 p-8 select-none">
+    <div className="flex-1 bg-slate-950 flex flex-col h-full overflow-y-auto text-slate-100 p-8 select-none">
       {/* Header Panel */}
       <header className="flex flex-col md:flex-row justify-between items-start md:items-center pb-6 border-b border-slate-800 gap-4">
         <div>
