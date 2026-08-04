@@ -217,6 +217,32 @@ export default function ChatWindow({ onShowEmergency, onCrisisSOS }) {
   const handleGeneratePDF = () => {
     const lastPeriodDate = localStorage.getItem('femcare_last_period_date') || tenDaysAgoDefault;
     
+    let userProfile = null;
+    const savedProfile = localStorage.getItem('femcare_user_profile');
+    if (savedProfile) {
+      try {
+        userProfile = JSON.parse(savedProfile);
+      } catch (e) {
+        console.error("Error loading user profile", e);
+      }
+    }
+
+    const formatHeight = (profile) => {
+      if (!profile) return 'N/A';
+      if (profile.heightUnit === 'cm') {
+        return profile.heightCm ? `${profile.heightCm} cm` : 'N/A';
+      } else {
+        const ft = profile.heightFeet || '0';
+        const inch = profile.heightInches || '0';
+        return `${ft}' ${inch}"`;
+      }
+    };
+
+    const formatWeight = (profile) => {
+      if (!profile || !profile.weight) return 'N/A';
+      return `${profile.weight} ${profile.weightUnit || 'kg'}`;
+    };
+
     let cycleLogs = {};
     const savedLogs = localStorage.getItem('femcare_cycle_logs');
     if (savedLogs) {
@@ -515,6 +541,34 @@ export default function ChatWindow({ onShowEmergency, onCrisisSOS }) {
             <div class="meta-info">
               <div><strong>Generated:</strong> ${dateGenerated}</div>
               <div><strong>System Baseline:</strong> Active</div>
+            </div>
+          </div>
+        </div>
+
+        <h2 class="section-title">Patient Profile Baseline</h2>
+        <div class="grid-summary">
+          <div class="metric-card">
+            <div class="metric-label">Name / Nickname</div>
+            <div class="metric-value">${userProfile?.name || 'N/A'}</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">Age & Email</div>
+            <div class="metric-value">${userProfile?.age ? `${userProfile.age} yrs` : 'N/A'} &nbsp;•&nbsp; ${userProfile?.email || 'N/A'}</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">Physical Baseline</div>
+            <div class="metric-value">
+              Height: ${formatHeight(userProfile)} &nbsp;•&nbsp; 
+              Weight: ${formatWeight(userProfile)}
+            </div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">Health Conditions & History</div>
+            <div class="metric-value">
+              ${(userProfile?.healthConditions && userProfile.healthConditions.length > 0) 
+                ? userProfile.healthConditions.join(', ') 
+                : 'None Logged'}
+              ${userProfile?.customHealthNotes ? ` (${userProfile.customHealthNotes})` : ''}
             </div>
           </div>
         </div>

@@ -7,6 +7,7 @@ import PhaseLifestyle from './components/PhaseLifestyle';
 import MentalHealth from './components/MentalHealth';
 import TopHeader from './components/TopHeader';
 import PrivateVaultModal from './components/PrivateVaultModal';
+import OnboardingModal from './components/OnboardingModal';
 
 function App() {
   const [showEmergency, setShowEmergency] = useState(false);
@@ -16,6 +17,20 @@ function App() {
   // Security lock status states
   const [isLocked, setIsLocked] = useState(true);
   const [isChangingPin, setIsChangingPin] = useState(false);
+
+  // Profile states
+  const [userProfile, setUserProfile] = useState(() => {
+    const saved = localStorage.getItem('femcare_user_profile');
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch (e) {
+        console.error("Error parsing user profile from localStorage", e);
+      }
+    }
+    return null;
+  });
+  const [showProfileEditor, setShowProfileEditor] = useState(false);
 
   const handleCrisisSOS = () => {
     setActiveView('mental');
@@ -36,14 +51,25 @@ function App() {
     localStorage.removeItem('femcare_chat_messages');
     localStorage.removeItem('femcare_cycle_logs');
     localStorage.removeItem('femcare_last_period_date');
+    localStorage.removeItem('femcare_user_profile');
     window.location.reload();
   };
 
+  const handleOnboardingComplete = (profile) => {
+    localStorage.setItem('femcare_user_profile', JSON.stringify(profile));
+    localStorage.setItem('femcare_last_period_date', profile.lastPeriodDate);
+    setUserProfile(profile);
+    // Trigger storage event so cycle guide and trackers sync up immediately
+    window.dispatchEvent(new Event('storage'));
+  };
+
+  const showOnboarding = !isLocked && !userProfile;
+
   return (
     <div className="flex h-screen w-full overflow-hidden bg-sage-bg font-sans text-charcoal antialiased relative">
-      {/* Main App Layout Container (blurred & disabled when locked) */}
+      {/* Main App Layout Container (blurred & disabled when locked or onboarding) */}
       <div className={`flex w-full h-full transition-all duration-500 ${
-        isLocked ? 'blur-2xl pointer-events-none select-none opacity-10' : ''
+        (isLocked || showOnboarding) ? 'blur-2xl pointer-events-none select-none opacity-10' : ''
       }`}>
         {/* Sidebar Navigation */}
         <Sidebar
@@ -61,6 +87,8 @@ function App() {
             onLock={() => setIsLocked(true)}
             onChangePin={handleChangePin}
             onResetVault={handleResetVault}
+            onEditProfile={() => setShowProfileEditor(true)}
+            userName={userProfile?.name}
           />
 
           {/* View Container */}
@@ -102,6 +130,30 @@ function App() {
           }}
           isChangingPin={isChangingPin}
           onCancelChangePin={handleCancelChangePin}
+        />
+      )}
+
+      {/* Onboarding Wizard Overlay (Mandatory on setup) */}
+      {showOnboarding && (
+        <OnboardingModal
+          isEditing={false}
+          onComplete={handleOnboardingComplete}
+        />
+      )}
+
+      {/* Profile Editor Modal Overlay */}
+      {showProfileEditor && (
+        <OnboardingModal
+          isEditing={true}
+          profileData={userProfile}
+          onComplete={(updatedProfile) => {
+            localStorage.setItem('femcare_user_profile', JSON.stringify(updatedProfile));
+            localStorage.setItem('femcare_last_period_date', updatedProfile.lastPeriodDate);
+            setUserProfile(updatedProfile);
+            setShowProfileEditor(false);
+            window.dispatchEvent(new Event('storage'));
+          }}
+          onCancel={() => setShowProfileEditor(false)}
         />
       )}
     </div>

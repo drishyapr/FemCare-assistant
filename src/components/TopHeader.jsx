@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 
-export default function TopHeader({ activeView, onLock, onChangePin, onResetVault }) {
+export default function TopHeader({ activeView, onLock, onChangePin, onResetVault, onEditProfile, userName }) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
 
@@ -40,16 +40,39 @@ export default function TopHeader({ activeView, onLock, onChangePin, onResetVaul
     }
   };
 
+  const getGreeting = () => {
+    const hour = new Date().getHours();
+    let timeGreeting = "Good Evening";
+    let emoji = "🌙";
+    if (hour < 12) {
+      timeGreeting = "Good Morning";
+      emoji = "🌅";
+    } else if (hour < 17) {
+      timeGreeting = "Good Afternoon";
+      emoji = "☀️";
+    }
+    
+    const name = userName ? userName : "Welcome back";
+    return `${timeGreeting}, ${name} ${emoji}`;
+  };
+
   const titleInfo = getTitle();
+  const greetingText = getGreeting();
 
   return (
     <header className="h-14 bg-sage-card border-b border-sage-border px-6 flex items-center justify-between text-charcoal relative z-40 flex-shrink-0 select-none shadow-sm">
-      {/* Left side: Dynamic Title Badge */}
-      <div className="flex items-center space-x-2.5">
-        <span className="text-lg leading-none">{titleInfo.icon}</span>
-        <h1 className="text-sm font-extrabold tracking-wider text-charcoal uppercase">
-          {titleInfo.label}
-        </h1>
+      {/* Left side: Dynamic Title Badge & Greeting */}
+      <div className="flex items-center space-x-4">
+        <div className="flex items-center space-x-2.5">
+          <span className="text-lg leading-none">{titleInfo.icon}</span>
+          <h1 className="text-sm font-extrabold tracking-wider text-charcoal uppercase">
+            {titleInfo.label}
+          </h1>
+        </div>
+        <div className="hidden sm:block h-4 w-px bg-sage-border" />
+        <span className="hidden sm:inline text-xs font-semibold text-charcoal-muted">
+          {greetingText}
+        </span>
       </div>
 
       {/* Right side: Security Controls */}
@@ -70,9 +93,18 @@ export default function TopHeader({ activeView, onLock, onChangePin, onResetVaul
               <button
                 onClick={() => {
                   setIsDropdownOpen(false);
-                  onChangePin();
+                  onEditProfile();
                 }}
                 className="flex items-center gap-2 px-4 py-2.5 text-xs font-semibold text-charcoal-muted hover:bg-sage-hover hover:text-charcoal transition-colors cursor-pointer text-left"
+              >
+                <span>👤 Edit Profile</span>
+              </button>
+              <button
+                onClick={() => {
+                  setIsDropdownOpen(false);
+                  onChangePin();
+                }}
+                className="flex items-center gap-2 px-4 py-2.5 text-xs font-semibold text-charcoal-muted hover:bg-sage-hover hover:text-charcoal transition-colors border-t border-sage-border cursor-pointer text-left"
               >
                 <span>🔒 Change PIN</span>
               </button>
