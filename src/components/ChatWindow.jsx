@@ -594,13 +594,13 @@ export default function ChatWindow({ onShowEmergency, onCrisisSOS }) {
   };
 
   return (
-    <div className="flex-1 flex flex-col h-full overflow-hidden bg-white text-slate-800">
+    <div className="flex-1 flex flex-col h-full overflow-hidden bg-sage-card text-charcoal">
       {/* Header */}
       <header className="h-16 border-b border-slate-200 bg-white flex items-center justify-between px-8 shadow-sm flex-shrink-0">
         <div>
-          <h2 className="font-semibold text-slate-800 text-lg tracking-wide">Safe Women's Health Portal</h2>
-          <p className="text-xs text-emerald-600 flex items-center font-medium">
-            <span className="w-2 h-2 rounded-full bg-emerald-500 inline-block mr-1.5 animate-pulse"></span>
+          <h2 className="font-extrabold text-charcoal text-lg tracking-wide">Safe Women's Health Portal</h2>
+          <p className="text-xs text-moss flex items-center font-semibold">
+            <span className="w-2 h-2 rounded-full bg-moss inline-block mr-1.5 animate-pulse"></span>
             Grounded in Verified Medical Data
           </p>
         </div>
@@ -623,13 +623,13 @@ export default function ChatWindow({ onShowEmergency, onCrisisSOS }) {
               Test Safety Trigger 🚨
             </button>
           )}
-          <div className="flex items-center gap-1.5 px-2.5 py-1.5 bg-emerald-50/60 border border-emerald-100/80 text-emerald-700 rounded-full text-xs font-medium shadow-sm transition-all duration-200 flex-shrink-0">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block animate-pulse"></span>
+          <div className="flex items-center gap-1.5 px-3 py-1.5 bg-sage-hover border border-sage-border text-moss rounded-full text-xs font-bold shadow-sm flex-shrink-0">
+            <span className="w-1.5 h-1.5 rounded-full bg-moss inline-block animate-pulse"></span>
             Session Saved
           </div>
           <button
             onClick={handleGeneratePDF}
-            className="bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-300 hover:text-white px-3 py-1.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5 cursor-pointer shadow-sm flex-shrink-0"
+            className="bg-sage-hover border border-sage-border text-charcoal-muted hover:text-charcoal hover:bg-sage-bg px-3 py-1.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5 cursor-pointer shadow-sm flex-shrink-0"
           >
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.8} stroke="currentColor" className="w-3.5 h-3.5">
               <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
@@ -638,7 +638,7 @@ export default function ChatWindow({ onShowEmergency, onCrisisSOS }) {
           </button>
           <button
             onClick={handleClearChat}
-            className="flex items-center gap-1.5 px-3.5 py-1.5 bg-slate-900 border border-slate-800 text-slate-300 hover:text-rose-400 hover:border-rose-500/40 rounded-xl text-xs font-medium transition-all duration-200 cursor-pointer shadow-sm flex-shrink-0"
+            className="flex items-center gap-1.5 px-3.5 py-1.5 bg-sage-hover border border-sage-border text-charcoal-muted hover:text-rose-600 hover:bg-rose-50 hover:border-rose-200 rounded-xl text-xs font-semibold transition-all duration-200 cursor-pointer shadow-sm flex-shrink-0"
           >
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.8} stroke="currentColor" className="w-3.5 h-3.5">
               <path strokeLinecap="round" strokeLinejoin="round" d="m14.74 9-.346 9m-4.788 0L9 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
@@ -649,19 +649,19 @@ export default function ChatWindow({ onShowEmergency, onCrisisSOS }) {
       </header>
 
       {/* Workspace / Chat history area */}
-      <div className="flex-1 overflow-y-auto p-6 space-y-4 bg-white">
+      <div className="flex-1 overflow-y-auto p-6 space-y-4 bg-sage-card">
         {messages.map((message) => (
           <div key={message.id} className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
             <div className="flex flex-col space-y-1.5 max-w-xl">
-              <div className={`rounded-2xl p-4 shadow-sm leading-relaxed text-sm whitespace-pre-line ${
+              <div className={`rounded-2xl p-4 shadow-sm leading-relaxed text-sm whitespace-pre-line border ${
                 message.sender === 'user'
-                  ? 'bg-pink-600 text-white'
+                  ? 'bg-moss text-white border-moss'
                   : message.isEmergency
                   ? 'bg-red-50 border-2 border-red-500 text-red-950 font-medium'
-                  : 'bg-slate-50 border border-slate-200/80 text-slate-700'
+                  : 'bg-sage-bg border-sage-border text-charcoal'
               }`}>
                 {message.sender === 'assistant' && message.id === 1 ? (
-                  <span>Welcome to the <strong className="text-pink-650">FemCare RAG Assistant</strong>. Ask me any women's health question.</span>
+                  <span>Welcome to the <strong className="text-moss">FemCare RAG Assistant</strong>. Ask me any women's health question.</span>
                 ) : message.isEmergency ? (
                   <div className="space-y-3">
                     <div className="flex items-center gap-2 text-red-700 font-bold">
@@ -689,7 +689,7 @@ export default function ChatWindow({ onShowEmergency, onCrisisSOS }) {
               </div>
               {message.sender === 'assistant' && message.citation && (
                 <div className="flex justify-start px-2">
-                  <span className="text-[10px] font-semibold text-emerald-700 bg-emerald-50 border border-emerald-100 rounded px-2 py-0.5 shadow-sm uppercase tracking-wider">
+                  <span className="text-[10px] font-bold text-moss bg-sage-hover border border-sage-border rounded px-2 py-0.5 shadow-sm uppercase tracking-wider">
                     Source: {message.citation}
                   </span>
                 </div>
@@ -699,11 +699,11 @@ export default function ChatWindow({ onShowEmergency, onCrisisSOS }) {
         ))}
         {isThinking && (
           <div className="flex justify-start">
-            <div className="bg-slate-50 border border-slate-200/80 text-slate-500 max-w-xl rounded-2xl px-4 py-3.5 shadow-sm text-sm flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-pink-500 animate-bounce [animation-delay:-0.3s]"></span>
-              <span className="w-1.5 h-1.5 rounded-full bg-pink-500 animate-bounce [animation-delay:-0.15s]"></span>
-              <span className="w-1.5 h-1.5 rounded-full bg-pink-500 animate-bounce"></span>
-              <span className="text-xs ml-1 text-slate-400 font-medium animate-pulse">FemCare is thinking...</span>
+            <div className="bg-sage-bg border border-sage-border text-charcoal-muted max-w-xl rounded-2xl px-4 py-3.5 shadow-sm text-sm flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-moss animate-bounce [animation-delay:-0.3s]"></span>
+              <span className="w-1.5 h-1.5 rounded-full bg-moss animate-bounce [animation-delay:-0.15s]"></span>
+              <span className="w-1.5 h-1.5 rounded-full bg-moss animate-bounce"></span>
+              <span className="text-xs ml-1 text-charcoal-muted font-semibold animate-pulse">FemCare is thinking...</span>
             </div>
           </div>
         )}
@@ -711,7 +711,7 @@ export default function ChatWindow({ onShowEmergency, onCrisisSOS }) {
       </div>
 
       {/* Suggested chips, Input area & Medical Disclaimer */}
-      <div className="p-6 bg-white border-t border-slate-100 flex-shrink-0">
+      <div className="p-6 bg-sage-card border-t border-sage-border flex-shrink-0">
         <div className="max-w-4xl mx-auto space-y-4">
           {/* Suggestion Chips */}
           <div className="flex flex-wrap gap-2">
@@ -719,7 +719,7 @@ export default function ChatWindow({ onShowEmergency, onCrisisSOS }) {
               <button
                 key={idx}
                 onClick={() => handleSendMessage(chip)}
-                className="text-xs bg-pink-50 hover:bg-pink-100 text-pink-700 font-medium px-3.5 py-1.5 rounded-full border border-pink-200/60 hover:border-pink-300 transition-all cursor-pointer"
+                className="text-xs bg-sage-hover hover:bg-sage-bg text-moss font-bold px-3.5 py-1.5 rounded-full border border-sage-border transition-all cursor-pointer"
               >
                 {chip}
               </button>
@@ -734,12 +734,12 @@ export default function ChatWindow({ onShowEmergency, onCrisisSOS }) {
               onChange={(e) => setInputMessage(e.target.value)}
               disabled={isThinking}
               placeholder="Ask a private women's health question..."
-              className="w-full pl-5 pr-12 py-3.5 bg-slate-50 border border-slate-250 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-400 focus:bg-white text-slate-800 placeholder-slate-400 transition-all shadow-inner text-sm disabled:opacity-75"
+              className="w-full pl-5 pr-12 py-3.5 bg-sage-bg border border-sage-border rounded-xl focus:outline-none focus:ring-2 focus:ring-moss focus:bg-sage-card text-charcoal placeholder-charcoal-muted transition-all shadow-inner text-sm disabled:opacity-75"
             />
             <button
               type="submit"
               disabled={isThinking}
-              className="absolute right-3 p-2 text-pink-500 hover:text-pink-600 rounded-lg transition-colors cursor-pointer disabled:opacity-50"
+              className="absolute right-3 p-2 text-moss hover:scale-110 active:scale-95 transition-all rounded-lg cursor-pointer disabled:opacity-50"
             >
               🚀
             </button>

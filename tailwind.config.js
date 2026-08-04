@@ -18,14 +18,22 @@ export default {
           700: '#831843',
         },
         sage: {
-          50: '#f4f7f6',
-          100: '#e8ecea',
-          200: '#d1dbd6',
-          300: '#a3b7ad',
-          400: '#759384',
-          500: '#567364',
-          600: '#41574b',
-          700: '#34453c',
+          bg: '#f0f5f1',
+          card: '#ffffff',
+          border: '#e1eae3',
+          accent: '#52795d',
+          hover: '#eaf1ec',
+          muted: '#6b7c70',
+        },
+        moss: {
+          DEFAULT: '#52795d',
+          hover: '#4a6e54',
+          dark: '#3d5a45',
+        },
+        charcoal: {
+          DEFAULT: '#232d25',
+          muted: '#4a5c50',
+          light: '#6b7c70',
         }
       }
     },

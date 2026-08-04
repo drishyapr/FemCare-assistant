@@ -267,23 +267,23 @@ export default function TrackingTools({ onCrisisSOS }) {
   const waterCount = waterGlasses.filter(Boolean).length;
 
   return (
-    <div className="flex-1 bg-slate-950 flex flex-col h-full overflow-y-auto text-slate-100 p-8 select-none">
+    <div className="flex-1 bg-sage-bg flex flex-col h-full overflow-y-auto text-charcoal p-8 select-none">
       {/* Header Panel */}
-      <header className="flex flex-col md:flex-row justify-between items-start md:items-center pb-6 border-b border-slate-800 gap-4">
+      <header className="flex flex-col md:flex-row justify-between items-start md:items-center pb-6 border-b border-sage-border gap-4">
         <div>
           <div className="flex flex-wrap items-center gap-3">
-            <h2 className="text-2xl font-bold tracking-wide text-slate-200">Wellness & Cycle Analytics</h2>
+            <h2 className="text-2xl font-extrabold tracking-wide text-charcoal">Wellness & Cycle Analytics</h2>
             {onCrisisSOS && (
               <button
                 onClick={onCrisisSOS}
-                className="flex items-center gap-1.5 px-3 py-2 bg-red-650 hover:bg-red-750 text-white rounded-xl text-xs font-bold transition-all duration-200 cursor-pointer shadow-sm active:scale-95 flex-shrink-0 animate-pulse"
+                className="flex items-center gap-1.5 px-3 py-2 bg-red-600 hover:bg-red-750 text-white rounded-xl text-xs font-bold transition-all duration-200 cursor-pointer shadow-sm active:scale-95 flex-shrink-0 animate-pulse"
               >
                 🚨 Crisis SOS
               </button>
             )}
             <button
               onClick={handleExportData}
-              className="bg-slate-900 border border-slate-800 hover:border-pink-500/40 text-slate-300 hover:text-white px-3 py-2 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5 cursor-pointer"
+              className="bg-sage-card border border-sage-border hover:border-moss/40 text-charcoal-muted hover:text-charcoal hover:bg-sage-hover px-3 py-2 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5 cursor-pointer shadow-sm"
             >
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-3.5 h-3.5">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
@@ -291,39 +291,39 @@ export default function TrackingTools({ onCrisisSOS }) {
               Export Data
             </button>
           </div>
-          <p className="text-xs text-slate-400 mt-1">Private client-side wellness log & cyclical pattern tracker</p>
+          <p className="text-xs text-charcoal-muted mt-1">Private client-side wellness log & cyclical pattern tracker</p>
         </div>
 
         {saveSuccess && (
-          <div className="bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 text-xs px-4 py-2.5 rounded-xl font-medium shadow-lg animate-pulse">
+          <div className="bg-emerald-100 border border-emerald-250 text-emerald-800 text-xs px-4 py-2.5 rounded-xl font-bold shadow-sm animate-pulse">
             ✓ Log entry saved successfully!
           </div>
         )}
       </header>
 
       {/* Cycle Phase Visualizer Card */}
-      <div className="bg-white text-slate-800 border border-slate-200 rounded-3xl p-6 shadow-xl mt-8">
+      <div className="bg-sage-card text-charcoal border border-sage-border rounded-3xl p-6 shadow-sm mt-8">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-6">
           <div>
-            <h3 className="text-lg font-bold text-slate-900 tracking-wide">Cycle Phase Visualizer</h3>
-            <p className="text-xs text-slate-500 mt-0.5">Understand your current phase and physiological cycle rhythm (Last period: {lastPeriodDate})</p>
+            <h3 className="text-lg font-bold text-charcoal tracking-wide">Cycle Phase Visualizer</h3>
+            <p className="text-xs text-charcoal-muted mt-0.5">Understand your current phase and physiological cycle rhythm (Last period: {lastPeriodDate})</p>
           </div>
 
           {/* Last Period Start Date & Update Button */}
           <div className="flex flex-wrap items-end gap-3 w-full md:w-auto">
             <div className="flex flex-col space-y-1">
-              <label className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Last Period Start Date</label>
+              <label className="text-[10px] uppercase font-bold text-charcoal-muted tracking-wider">Last Period Start Date</label>
               <input
                 type="date"
                 value={tempInputDate}
                 onChange={(e) => setTempInputDate(e.target.value)}
-                className="bg-slate-50 border border-slate-200 text-slate-800 text-xs rounded-xl px-3.5 py-2.5 focus:ring-2 focus:ring-pink-400 focus:outline-none transition-all shadow-inner"
+                className="bg-sage-bg border border-sage-border text-charcoal text-xs rounded-xl px-3.5 py-2.5 focus:ring-2 focus:ring-moss focus:outline-none transition-all shadow-inner font-semibold"
               />
             </div>
             <button
               type="button"
               onClick={handleUpdateCycle}
-              className="bg-slate-900 hover:bg-slate-800 text-white font-semibold text-xs px-4 py-3 rounded-xl transition-all shadow-md active:scale-95 cursor-pointer"
+              className="bg-moss hover:bg-moss-hover text-white font-bold text-xs px-4 py-3 rounded-xl transition-all shadow-sm active:scale-95 cursor-pointer"
             >
               Update Cycle
             </button>
@@ -337,7 +337,7 @@ export default function TrackingTools({ onCrisisSOS }) {
             className="absolute top-[-8px] -translate-x-1/2 z-10 flex flex-col items-center transition-all duration-500 ease-in-out"
             style={{ left: `${progressPercent}%` }}
           >
-            <div className={`text-white text-[10px] font-bold px-3 py-1 rounded-full shadow-lg flex items-center gap-1.5 border whitespace-nowrap transition-colors duration-500 ${badgeColorClass}`}>
+            <div className={`text-white text-[10px] font-bold px-3 py-1 rounded-full shadow-md flex items-center gap-1.5 border whitespace-nowrap transition-colors duration-500 ${badgeColorClass}`}>
               <span className="w-1.5 h-1.5 rounded-full bg-white inline-block animate-ping"></span>
               Current Phase: {currentPhase} (Day {currentDayOfCycle})
             </div>
@@ -345,7 +345,7 @@ export default function TrackingTools({ onCrisisSOS }) {
           </div>
 
           {/* Color Coded Bar Segments */}
-          <div className="w-full h-3.5 rounded-full overflow-hidden bg-slate-100 flex shadow-inner border border-slate-200/60">
+          <div className="w-full h-3.5 rounded-full overflow-hidden bg-sage-bg flex shadow-inner border border-sage-border">
             {/* Menstrual Phase */}
             <div className="flex-[5] bg-pink-400 hover:opacity-90 transition-opacity cursor-pointer relative group" title="Menstrual Phase: Days 1-5">
               <div className="absolute inset-0 bg-gradient-to-r from-pink-500/10 to-transparent"></div>
@@ -366,20 +366,20 @@ export default function TrackingTools({ onCrisisSOS }) {
 
           {/* Grid Labels & Day Ranges */}
           <div className="grid grid-cols-4 gap-3 text-center text-xs">
-            <div className="bg-pink-50/50 rounded-2xl p-3 border border-pink-100/40">
-              <span className="font-semibold text-pink-700 block">Menstrual</span>
+            <div className="bg-pink-50 rounded-2xl p-3 border border-pink-100">
+              <span className="font-bold text-pink-700 block">Menstrual</span>
               <span className="text-[10px] text-pink-500">Days 1-5</span>
             </div>
-            <div className="bg-purple-50/50 rounded-2xl p-3 border border-purple-100/40">
-              <span className="font-semibold text-purple-700 block">Follicular</span>
+            <div className="bg-purple-50 rounded-2xl p-3 border border-purple-100">
+              <span className="font-bold text-purple-700 block">Follicular</span>
               <span className="text-[10px] text-purple-500">Days 6-13</span>
             </div>
-            <div className="bg-emerald-50/50 rounded-2xl p-3 border border-emerald-100/40">
-              <span className="font-semibold text-emerald-700 block">Ovulatory</span>
+            <div className="bg-emerald-50 rounded-2xl p-3 border border-emerald-100">
+              <span className="font-bold text-emerald-700 block">Ovulatory</span>
               <span className="text-[10px] text-emerald-500">Days 14-17</span>
             </div>
-            <div className="bg-amber-50/50 rounded-2xl p-3 border border-amber-100/40">
-              <span className="font-semibold text-amber-700 block">Luteal</span>
+            <div className="bg-amber-50 rounded-2xl p-3 border border-amber-100">
+              <span className="font-bold text-amber-700 block">Luteal</span>
               <span className="text-[10px] text-amber-500">Days 18-28</span>
             </div>
           </div>
@@ -391,47 +391,47 @@ export default function TrackingTools({ onCrisisSOS }) {
 
         {/* Left Side: Cycle Logging (Col Span: 5) */}
         <div className="lg:col-span-5 space-y-6">
-          <div className="bg-slate-900 border border-slate-800/80 rounded-3xl p-6 shadow-xl space-y-5">
+          <div className="bg-sage-card border border-sage-border rounded-3xl p-6 shadow-sm space-y-5">
             <div className="flex justify-between items-center">
               <div className="flex items-center gap-3">
                 <button
                   onClick={handlePrevMonth}
-                  className="w-8 h-8 rounded-xl bg-slate-800 hover:bg-slate-750 text-slate-200 flex items-center justify-center cursor-pointer transition-colors"
+                  className="w-8 h-8 rounded-xl bg-sage-hover hover:bg-sage-bg text-charcoal flex items-center justify-center cursor-pointer transition-colors shadow-sm font-bold border border-sage-border"
                   title="Previous Month"
                 >
                   &lt;
                 </button>
-                <h3 className="font-semibold text-slate-200 text-xs sm:text-sm uppercase tracking-wider">
+                <h3 className="font-bold text-charcoal text-xs sm:text-sm uppercase tracking-wider">
                   {currentDate.toLocaleDateString('en-US', { month: 'short', year: 'numeric' })} Log
                 </h3>
                 <button
                   onClick={handleNextMonth}
-                  className="w-8 h-8 rounded-xl bg-slate-800 hover:bg-slate-750 text-slate-200 flex items-center justify-center cursor-pointer transition-colors"
+                  className="w-8 h-8 rounded-xl bg-sage-hover hover:bg-sage-bg text-charcoal flex items-center justify-center cursor-pointer transition-colors shadow-sm font-bold border border-sage-border"
                   title="Next Month"
                 >
                   &gt;
                 </button>
               </div>
-              <span className="text-[10px] text-pink-400 font-semibold bg-pink-950/40 px-2 py-0.5 rounded-full border border-pink-900/30">Active Cycle Log</span>
+              <span className="text-[10px] text-moss font-bold bg-sage-hover px-2.5 py-1 rounded-full border border-sage-border uppercase">Active Cycle Log</span>
             </div>
 
             {/* Prediction Banner */}
-            <div className="bg-pink-950/30 border border-pink-900/40 text-pink-300 text-[11px] px-3.5 py-2.5 rounded-xl font-medium flex items-center gap-2">
+            <div className="bg-red-50 border border-red-200/60 text-red-700 text-[11px] px-3.5 py-2.5 rounded-xl font-bold flex items-center gap-2">
               <span className="text-sm">🔮</span>
               <span>{formatPredictionWindow(lastPeriodDate)}</span>
             </div>
 
             {/* Fertility Banner */}
-            <div className="bg-teal-950/30 border border-teal-900/40 text-teal-300 text-[11px] px-3.5 py-2.5 rounded-xl font-medium flex items-center gap-2">
+            <div className="bg-teal-50 border border-teal-200/60 text-teal-700 text-[11px] px-3.5 py-2.5 rounded-xl font-bold flex items-center gap-2">
               <span className="text-sm">✨</span>
               <span>{formatFertilityWindow(lastPeriodDate)}</span>
             </div>
 
             {/* Calendar grid */}
-            <div className="bg-slate-950/60 border border-slate-800/80 rounded-2xl p-4 shadow-inner">
+            <div className="bg-sage-bg border border-sage-border rounded-2xl p-4 shadow-inner">
               <div className="grid grid-cols-7 gap-2 text-center mb-2">
                 {weekDays.map((day, idx) => (
-                  <span key={idx} className="text-[10px] font-bold text-slate-500">{day}</span>
+                  <span key={idx} className="text-[10px] font-bold text-charcoal-muted">{day}</span>
                 ))}
               </div>
               <div className="grid grid-cols-7 gap-2">
@@ -464,12 +464,12 @@ export default function TrackingTools({ onCrisisSOS }) {
                         const cellClass = flowClass
                           ? flowClass
                           : isPredicted
-                          ? "bg-pink-500/10 border border-dashed border-pink-500/40 text-pink-300 hover:bg-pink-500/20"
+                          ? "bg-pink-500/10 border border-dashed border-pink-500/40 text-pink-700 hover:bg-pink-500/25"
                           : isOvulation
-                          ? "bg-teal-500/20 border-2 border-teal-400 text-teal-300 font-bold shadow-md shadow-teal-500/10 hover:bg-teal-500/30"
+                          ? "bg-teal-500/20 border-2 border-teal-400 text-teal-700 font-bold shadow-md shadow-teal-550/10 hover:bg-teal-500/35"
                           : isFertile
-                          ? "bg-teal-500/15 border border-teal-500/30 text-teal-300 hover:bg-teal-500/25"
-                          : "hover:bg-slate-800 text-slate-400";
+                          ? "bg-teal-500/10 border border-teal-500/30 text-teal-700 hover:bg-teal-500/25"
+                          : "hover:bg-sage-hover text-charcoal-muted";
 
                         return (
                           <button
@@ -477,7 +477,7 @@ export default function TrackingTools({ onCrisisSOS }) {
                             onClick={() => handleDayClick(day)}
                             className={`aspect-square text-xs rounded-xl flex items-center justify-center transition-all relative ${
                               isSelected 
-                                ? 'ring-2 ring-pink-500 ring-offset-2 ring-offset-slate-950 shadow-md shadow-pink-500/30 scale-105 z-10 text-white font-bold' 
+                                ? 'ring-2 ring-moss ring-offset-2 ring-offset-sage-card shadow-md shadow-moss/30 scale-105 z-10 text-moss font-extrabold' 
                                 : ''
                             } ${cellClass}`}
                           >
@@ -499,45 +499,45 @@ export default function TrackingTools({ onCrisisSOS }) {
               </div>
 
               {/* Calendar Legend */}
-              <div className="flex flex-wrap items-center justify-between gap-2 px-1 pt-4 mt-4 border-t border-slate-800/80 text-[10px] text-slate-400">
-                <div className="flex items-center gap-1.5">
+              <div className="flex flex-wrap items-center justify-between gap-2 px-1 pt-4 mt-4 border-t border-sage-border text-[10px] text-charcoal-muted">
+                <div className="flex items-center gap-1.5 font-semibold">
                   <span className="w-2.5 h-2.5 rounded bg-pink-500 inline-block"></span>
                   <span>Logged Period</span>
                 </div>
-                <div className="flex items-center gap-1.5">
+                <div className="flex items-center gap-1.5 font-semibold">
                   <span className="w-2.5 h-2.5 rounded border border-dashed border-pink-500 bg-pink-500/10 inline-block"></span>
                   <span>Predicted Period</span>
                 </div>
-                <div className="flex items-center gap-1.5">
+                <div className="flex items-center gap-1.5 font-semibold">
                   <span className="w-2.5 h-2.5 rounded bg-teal-500/20 border border-teal-500/30 inline-block"></span>
                   <span>Fertile Window</span>
                 </div>
-                <div className="flex items-center gap-1.5">
-                  <span className="text-teal-400 text-[10px]">⭐</span>
+                <div className="flex items-center gap-1.5 font-semibold">
+                  <span className="text-teal-500 text-[10px]">⭐</span>
                   <span>Ovulation Day</span>
                 </div>
               </div>
             </div>
 
             {/* Selected Day Status Input Area */}
-            <div className="bg-slate-950/40 border border-slate-850 rounded-2xl p-4 space-y-4">
-              <div className="text-xs font-semibold text-slate-300">
-                Log Details for <span className="text-pink-400">
+            <div className="bg-sage-hover border border-sage-border rounded-2xl p-4 space-y-4">
+              <div className="text-xs font-bold text-charcoal">
+                Log Details for <span className="text-moss">
                   {selectedDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
                 </span>
               </div>
 
               {/* Flow Selector */}
               <div className="space-y-2">
-                <span className="text-[10px] text-slate-500 uppercase tracking-wider font-bold">Flow Intensity</span>
+                <span className="text-[10px] text-charcoal-muted uppercase tracking-wider font-bold">Flow Intensity</span>
                 <div className="grid grid-cols-4 gap-2">
                   {['none', 'light', 'medium', 'heavy'].map((flow) => (
                     <button
                       key={flow}
                       onClick={() => logFlow(flow)}
-                      className={`text-[11px] py-2 capitalize rounded-xl transition-all border cursor-pointer ${activeDayLog.flow === flow
-                        ? 'bg-pink-600/30 text-pink-300 border-pink-500 font-medium'
-                        : 'bg-slate-900/60 text-slate-400 border-slate-800 hover:border-slate-700'
+                      className={`text-[11px] py-2 capitalize rounded-xl transition-all border cursor-pointer font-semibold ${activeDayLog.flow === flow
+                        ? 'bg-moss text-white border-moss shadow-sm font-bold'
+                        : 'bg-sage-card text-charcoal border-sage-border hover:bg-sage-bg'
                         }`}
                     >
                       {flow}
@@ -548,7 +548,7 @@ export default function TrackingTools({ onCrisisSOS }) {
 
               {/* Symptoms Selector */}
               <div className="space-y-2">
-                <span className="text-[10px] text-slate-500 uppercase tracking-wider font-bold">Logged Symptoms</span>
+                <span className="text-[10px] text-charcoal-muted uppercase tracking-wider font-bold">Logged Symptoms</span>
                 <div className="flex flex-wrap gap-1.5">
                   {['Cramps', 'Fatigue', 'Headache', 'Bloating'].map((symptom) => {
                     const isActive = activeDayLog.symptoms.includes(symptom);
@@ -556,9 +556,9 @@ export default function TrackingTools({ onCrisisSOS }) {
                       <button
                         key={symptom}
                         onClick={() => toggleSymptom(symptom)}
-                        className={`text-[10px] px-3 py-1 rounded-full transition-all border cursor-pointer ${isActive
-                          ? 'bg-rose-500/20 text-rose-300 border-rose-500/40 font-medium'
-                          : 'bg-slate-900/40 text-slate-500 border-slate-800/60 hover:text-slate-400 hover:border-slate-700'
+                        className={`text-[10px] px-3 py-1 rounded-full transition-all border cursor-pointer font-semibold ${isActive
+                          ? 'bg-moss text-white border-moss shadow-sm'
+                          : 'bg-sage-card text-charcoal-muted border-sage-border hover:bg-sage-hover'
                           }`}
                       >
                         {symptom}
@@ -575,33 +575,33 @@ export default function TrackingTools({ onCrisisSOS }) {
         <div className="lg:col-span-7 space-y-6">
 
           {/* Hydration Log */}
-          <div className="bg-slate-900 border border-slate-800/80 rounded-3xl p-6 shadow-xl space-y-4">
+          <div className="bg-sage-card border border-sage-border rounded-3xl p-6 shadow-sm space-y-4">
             <div className="flex justify-between items-center">
-              <h3 className="font-semibold text-slate-200 text-sm uppercase tracking-wider">Hydration Log</h3>
-              <span className="text-sky-400 lowercase text-xs font-semibold bg-sky-950/40 border border-sky-900/30 px-3 py-0.5 rounded-full">
+              <h3 className="font-extrabold text-charcoal text-sm uppercase tracking-wider">Hydration Log</h3>
+              <span className="text-sky-700 bg-sky-50 border border-sky-200/60 lowercase text-xs font-bold px-3 py-0.5 rounded-full shadow-sm">
                 {waterCount}/8 glasses ({(waterCount * 0.25).toFixed(2)}L)
               </span>
             </div>
 
-            <div className="bg-slate-950/60 border border-slate-800/80 rounded-2xl p-6 flex flex-col items-center gap-4">
+            <div className="bg-sage-bg border border-sage-border rounded-2xl p-6 flex flex-col items-center gap-4">
               <div className="flex flex-wrap justify-center gap-4">
                 {waterGlasses.map((filled, idx) => (
                   <button
                     key={idx}
                     onClick={() => handleWaterClick(idx)}
                     className={`w-8 h-11 border-2 rounded-b-xl rounded-t-sm flex items-end justify-center transition-all cursor-pointer ${filled
-                      ? 'border-sky-400 bg-sky-500/30 text-sky-400 scale-105 shadow-md shadow-sky-500/10'
-                      : 'border-slate-700 hover:border-slate-500 text-slate-600'
+                      ? 'border-sky-400 bg-sky-500/30 text-sky-500 scale-105 shadow-md shadow-sky-500/10'
+                      : 'border-slate-300 hover:border-slate-400 text-slate-400'
                       }`}
                     title={`Glass ${idx + 1}`}
                   >
-                    <div className={`w-full transition-all rounded-b-lg ${filled ? 'h-7 bg-sky-400/80' : 'h-0'}`}></div>
+                    <div className={`w-full transition-all rounded-b-lg ${filled ? 'h-7 bg-sky-400/85' : 'h-0'}`}></div>
                   </button>
                 ))}
               </div>
               <button
                 onClick={() => setWaterGlasses([false, false, false, false, false, false, false, false])}
-                className="text-[10px] text-slate-500 hover:text-sky-400 uppercase tracking-widest font-bold transition-colors cursor-pointer"
+                className="text-[10px] text-charcoal-muted hover:text-sky-700 uppercase tracking-widest font-bold transition-colors cursor-pointer"
               >
                 Reset Hydration
               </button>
@@ -609,15 +609,15 @@ export default function TrackingTools({ onCrisisSOS }) {
           </div>
 
           {/* Daily Vitals */}
-          <div className="bg-slate-900 border border-slate-800/80 rounded-3xl p-6 shadow-xl space-y-4">
-            <h3 className="font-semibold text-slate-200 text-sm uppercase tracking-wider">Daily Vitals</h3>
+          <div className="bg-sage-card border border-sage-border rounded-3xl p-6 shadow-sm space-y-4">
+            <h3 className="font-extrabold text-charcoal text-sm uppercase tracking-wider">Daily Vitals</h3>
 
-            <div className="bg-slate-950/60 border border-slate-800/80 rounded-2xl p-6 space-y-6 shadow-inner">
+            <div className="bg-sage-bg border border-sage-border rounded-2xl p-6 space-y-6 shadow-inner">
               {/* Mood Slider */}
               <div className="space-y-2">
-                <div className="flex justify-between text-sm">
-                  <span className="text-slate-400 font-medium">Overall Mood</span>
-                  <span className="text-pink-400 font-semibold">{getMoodEmoji(mood)}</span>
+                <div className="flex justify-between text-sm font-semibold">
+                  <span className="text-charcoal-muted">Overall Mood</span>
+                  <span className="text-moss">{getMoodEmoji(mood)}</span>
                 </div>
                 <input
                   type="range"
@@ -625,15 +625,15 @@ export default function TrackingTools({ onCrisisSOS }) {
                   max="10"
                   value={mood}
                   onChange={(e) => setMood(parseInt(e.target.value))}
-                  className="w-full accent-pink-500 bg-slate-800 h-2 rounded-lg appearance-none cursor-pointer"
+                  className="w-full accent-moss bg-sage-border h-2 rounded-lg appearance-none cursor-pointer"
                 />
               </div>
 
               {/* Energy Slider */}
               <div className="space-y-2">
-                <div className="flex justify-between text-sm">
-                  <span className="text-slate-400 font-medium">Energy Level</span>
-                  <span className="text-amber-400 font-semibold">{getEnergyEmoji(energy)}</span>
+                <div className="flex justify-between text-sm font-semibold">
+                  <span className="text-charcoal-muted">Energy Level</span>
+                  <span className="text-moss">{getEnergyEmoji(energy)}</span>
                 </div>
                 <input
                   type="range"
@@ -641,7 +641,7 @@ export default function TrackingTools({ onCrisisSOS }) {
                   max="10"
                   value={energy}
                   onChange={(e) => setEnergy(parseInt(e.target.value))}
-                  className="w-full accent-amber-500 bg-slate-800 h-2 rounded-lg appearance-none cursor-pointer"
+                  className="w-full accent-moss bg-sage-border h-2 rounded-lg appearance-none cursor-pointer"
                 />
               </div>
             </div>
@@ -650,7 +650,7 @@ export default function TrackingTools({ onCrisisSOS }) {
           {/* Action Button */}
           <button
             onClick={handleSave}
-            className="w-full py-4 bg-gradient-to-r from-pink-500 to-rose-600 hover:from-pink-650 hover:to-rose-700 text-white rounded-2xl font-bold text-sm transition-all shadow-lg shadow-pink-950/20 active:scale-[0.98] cursor-pointer"
+            className="w-full py-4 bg-moss hover:bg-moss-hover text-white rounded-2xl font-bold text-sm transition-all shadow-md active:scale-[0.98] cursor-pointer"
           >
             Save Daily Journal Entry
           </button>

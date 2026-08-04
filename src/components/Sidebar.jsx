@@ -2,13 +2,13 @@
 
 export default function Sidebar({ isCollapsed, onToggleCollapse, activeView, onChangeView }) {
   return (
-    <div className={`bg-slate-900 text-white flex flex-col h-screen flex-shrink-0 p-4 border-r border-slate-800 transition-all duration-300 ease-in-out relative ${
+    <div className={`bg-sage-card text-charcoal flex flex-col h-screen flex-shrink-0 p-4 border-r border-sage-border transition-all duration-300 ease-in-out relative z-30 shadow-sm ${
       isCollapsed ? 'w-16' : 'w-64'
     }`}>
       {/* Collapse Toggle Button */}
       <button
         onClick={onToggleCollapse}
-        className="absolute -right-3 top-5 w-6 h-6 bg-slate-800 border border-slate-700 hover:bg-slate-750 text-white rounded-full flex items-center justify-center text-xs cursor-pointer shadow-md shadow-slate-950/50 hover:scale-105 active:scale-95 transition-all z-50"
+        className="absolute -right-3 top-5 w-6 h-6 bg-sage-card border border-sage-border hover:bg-sage-hover text-charcoal-muted rounded-full flex items-center justify-center text-xs cursor-pointer shadow-sm hover:scale-105 active:scale-95 transition-all z-50"
         title={isCollapsed ? "Expand Sidebar" : "Collapse Sidebar"}
       >
         {isCollapsed ? '▶' : '◀'}
@@ -16,9 +16,9 @@ export default function Sidebar({ isCollapsed, onToggleCollapse, activeView, onC
 
       {/* Header Logo */}
       <div className={`mb-8 flex items-center ${isCollapsed ? 'justify-center' : 'space-x-2'}`}>
-        <span className="text-2xl font-bold text-pink-505 select-none animate-pulse">🌸</span>
+        <span className="text-2xl font-bold text-moss select-none animate-pulse">🌸</span>
         {!isCollapsed && (
-          <span className="text-lg font-bold font-sans tracking-wider text-pink-100 whitespace-nowrap overflow-hidden transition-all duration-300">
+          <span className="text-base font-extrabold tracking-wider text-moss whitespace-nowrap overflow-hidden transition-all duration-300 uppercase">
             FemCare RAG
           </span>
         )}
@@ -26,7 +26,7 @@ export default function Sidebar({ isCollapsed, onToggleCollapse, activeView, onC
 
       {/* Workspace Menu */}
       <div className="flex-1 space-y-4 overflow-hidden">
-        <div className={`text-[10px] uppercase text-slate-500 font-semibold tracking-wider ${isCollapsed ? 'text-center' : 'px-1'}`}>
+        <div className={`text-[10px] uppercase text-charcoal-muted font-bold tracking-wider ${isCollapsed ? 'text-center' : 'px-1'}`}>
           {isCollapsed ? '•••' : 'Workspace'}
         </div>
         
@@ -34,67 +34,67 @@ export default function Sidebar({ isCollapsed, onToggleCollapse, activeView, onC
           {/* Health Assistant tab */}
           <button
             onClick={() => onChangeView('chat')}
-            className={`w-full flex items-center rounded-xl font-medium transition-all cursor-pointer ${
+            className={`w-full flex items-center rounded-xl font-semibold transition-all cursor-pointer ${
               activeView === 'chat'
-                ? 'bg-gradient-to-r from-pink-955/40 to-rose-950/20 text-pink-300 border border-pink-900/40'
-                : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800 border border-transparent'
-            } ${isCollapsed ? 'justify-center p-2.5' : 'space-x-3 px-3 py-2.5'}`}
+                ? 'bg-moss text-white shadow-sm'
+                : 'text-charcoal-muted hover:text-charcoal hover:bg-sage-hover border border-transparent'
+            } ${isCollapsed ? 'justify-center p-2.5' : 'space-x-3 px-3.5 py-2.5'}`}
             title="Health Assistant"
           >
             <span className="text-base">💬</span>
-            {!isCollapsed && <span className="text-sm whitespace-nowrap overflow-hidden transition-all duration-300">Health Assistant</span>}
+            {!isCollapsed && <span className="text-xs whitespace-nowrap overflow-hidden transition-all duration-300">Health Assistant</span>}
           </button>
 
           {/* Wellness Tracker tab */}
           <button
             onClick={() => onChangeView('tracker')}
-            className={`w-full flex items-center rounded-xl font-medium transition-all cursor-pointer ${
+            className={`w-full flex items-center rounded-xl font-semibold transition-all cursor-pointer ${
               activeView === 'tracker'
-                ? 'bg-gradient-to-r from-pink-955/40 to-rose-950/20 text-pink-300 border border-pink-900/40'
-                : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800 border border-transparent'
-            } ${isCollapsed ? 'justify-center p-2.5' : 'space-x-3 px-3 py-2.5'}`}
+                ? 'bg-moss text-white shadow-sm'
+                : 'text-charcoal-muted hover:text-charcoal hover:bg-sage-hover border border-transparent'
+            } ${isCollapsed ? 'justify-center p-2.5' : 'space-x-3 px-3.5 py-2.5'}`}
             title="Wellness Tracker"
           >
             <span className="text-base">📊</span>
-            {!isCollapsed && <span className="text-sm whitespace-nowrap overflow-hidden transition-all duration-300">Wellness Tracker</span>}
+            {!isCollapsed && <span className="text-xs whitespace-nowrap overflow-hidden transition-all duration-300">Wellness Tracker</span>}
           </button>
 
           {/* Phase & Lifestyle tab */}
           <button
             onClick={() => onChangeView('lifestyle')}
-            className={`w-full flex items-center rounded-xl font-medium transition-all cursor-pointer ${
+            className={`w-full flex items-center rounded-xl font-semibold transition-all cursor-pointer ${
               activeView === 'lifestyle'
-                ? 'bg-gradient-to-r from-pink-955/40 to-rose-950/20 text-pink-300 border border-pink-900/40'
-                : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800 border border-transparent'
-            } ${isCollapsed ? 'justify-center p-2.5' : 'space-x-3 px-3 py-2.5'}`}
+                ? 'bg-moss text-white shadow-sm'
+                : 'text-charcoal-muted hover:text-charcoal hover:bg-sage-hover border border-transparent'
+            } ${isCollapsed ? 'justify-center p-2.5' : 'space-x-3 px-3.5 py-2.5'}`}
             title="Phase & Lifestyle"
           >
             <span className="text-base">🌿</span>
-            {!isCollapsed && <span className="text-sm whitespace-nowrap overflow-hidden transition-all duration-300">Phase & Lifestyle</span>}
+            {!isCollapsed && <span className="text-xs whitespace-nowrap overflow-hidden transition-all duration-300">Phase & Lifestyle</span>}
           </button>
 
           {/* Mental Health tab */}
           <button
             onClick={() => onChangeView('mental')}
-            className={`w-full flex items-center rounded-xl font-medium transition-all cursor-pointer ${
+            className={`w-full flex items-center rounded-xl font-semibold transition-all cursor-pointer ${
               activeView === 'mental'
-                ? 'bg-gradient-to-r from-pink-955/40 to-rose-950/20 text-pink-300 border border-pink-900/40'
-                : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800 border border-transparent'
-            } ${isCollapsed ? 'justify-center p-2.5' : 'space-x-3 px-3 py-2.5'}`}
+                ? 'bg-moss text-white shadow-sm'
+                : 'text-charcoal-muted hover:text-charcoal hover:bg-sage-hover border border-transparent'
+            } ${isCollapsed ? 'justify-center p-2.5' : 'space-x-3 px-3.5 py-2.5'}`}
             title="Mental Health"
           >
             <span className="text-base">🧠</span>
-            {!isCollapsed && <span className="text-sm whitespace-nowrap overflow-hidden transition-all duration-300">Mental Health</span>}
+            {!isCollapsed && <span className="text-xs whitespace-nowrap overflow-hidden transition-all duration-300">Mental Health</span>}
           </button>
         </nav>
       </div>
 
       {/* Footer Disclaimer/Status */}
-      <div className="border-t border-slate-800/80 pt-4 flex items-center justify-center">
+      <div className="border-t border-sage-border pt-4 flex items-center justify-center">
         {isCollapsed ? (
-          <span className="text-emerald-400 text-xs" title="Connection is private and secure">🔒</span>
+          <span className="text-moss text-xs" title="Connection is private and secure">🔒</span>
         ) : (
-          <span className="text-[10px] text-slate-500 text-center tracking-wide whitespace-nowrap overflow-hidden transition-all duration-300">
+          <span className="text-[10px] text-charcoal-muted text-center font-bold tracking-wide whitespace-nowrap overflow-hidden transition-all duration-300 uppercase">
             🔒 Private & Secure Connection
           </span>
         )}

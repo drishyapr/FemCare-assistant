@@ -40,7 +40,7 @@ function App() {
   };
 
   return (
-    <div className="flex h-screen w-full overflow-hidden bg-slate-950 font-sans text-slate-100 antialiased relative">
+    <div className="flex h-screen w-full overflow-hidden bg-sage-bg font-sans text-charcoal antialiased relative">
       {/* Main App Layout Container (blurred & disabled when locked) */}
       <div className={`flex w-full h-full transition-all duration-500 ${
         isLocked ? 'blur-2xl pointer-events-none select-none opacity-10' : ''
@@ -66,12 +66,14 @@ function App() {
           {/* View Container */}
           <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
             {activeView === 'chat' ? (
-              /* Chat Workspace (Center Pane with White Background) */
-              <div className="flex-1 flex flex-col min-w-0 bg-white relative overflow-hidden">
-                <ChatWindow 
-                  onShowEmergency={() => setShowEmergency(true)} 
-                  onCrisisSOS={handleCrisisSOS}
-                />
+              /* Chat Workspace (Bento Card Style) */
+              <div className="flex-1 p-8 bg-sage-bg overflow-hidden flex flex-col min-w-0">
+                <div className="flex-1 bg-sage-card border border-sage-border rounded-3xl shadow-sm overflow-hidden flex flex-col min-w-0">
+                  <ChatWindow 
+                    onShowEmergency={() => setShowEmergency(true)} 
+                    onCrisisSOS={handleCrisisSOS}
+                  />
+                </div>
               </div>
             ) : activeView === 'tracker' ? (
               /* Wellness Tracker Dashboard Pane (Dark Theme) */

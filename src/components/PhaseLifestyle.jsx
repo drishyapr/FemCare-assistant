@@ -182,12 +182,12 @@ export default function PhaseLifestyle({ onCrisisSOS }) {
   const details = PHASE_DETAILS[phaseKey];
 
   return (
-    <div className="flex-1 bg-slate-950 flex flex-col h-full overflow-y-auto text-slate-100 p-8 select-none">
+    <div className="flex-1 bg-sage-bg flex flex-col h-full overflow-y-auto text-charcoal p-8 select-none">
       {/* Header Panel */}
-      <header className="flex flex-col pb-6 border-b border-slate-800 gap-2">
+      <header className="flex flex-col pb-6 border-b border-sage-border gap-2">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <h2 className="text-2xl font-bold tracking-wide text-slate-200">Phase-Synced Lifestyle Guide</h2>
+            <h2 className="text-2xl font-extrabold tracking-wide text-charcoal">Phase-Synced Lifestyle Guide</h2>
             {onCrisisSOS && (
               <button
                 onClick={onCrisisSOS}
@@ -197,11 +197,11 @@ export default function PhaseLifestyle({ onCrisisSOS }) {
               </button>
             )}
           </div>
-          <span className="text-[10px] text-slate-400 font-semibold bg-slate-900 px-3.5 py-1.5 rounded-xl border border-slate-800 shadow-inner">
+          <span className="text-[10px] text-charcoal font-bold bg-sage-card px-3.5 py-1.5 rounded-xl border border-sage-border shadow-sm uppercase">
             Reflecting Cycle Start: {lastPeriodDate}
           </span>
         </div>
-        <p className="text-xs text-slate-400">Align nutrition, movement, and wellness parameters with your active biological rhythms.</p>
+        <p className="text-xs text-charcoal-muted">Align nutrition, movement, and wellness parameters with your active biological rhythms.</p>
       </header>
 
       {/* Main Grid Content */}
@@ -211,7 +211,7 @@ export default function PhaseLifestyle({ onCrisisSOS }) {
         <div className="lg:col-span-5 flex flex-col gap-6">
           
           {/* Main Active Phase Highlight Card */}
-          <div className="bg-slate-900 border border-slate-800/80 rounded-3xl p-6 shadow-xl relative overflow-hidden flex-1 flex flex-col justify-between min-h-[300px]">
+          <div className="bg-sage-card border border-sage-border rounded-3xl p-6 shadow-sm relative overflow-hidden flex-1 flex flex-col justify-between min-h-[300px]">
             {/* Ambient Background Gradient Glow */}
             <div className={`absolute top-0 right-0 w-32 h-32 rounded-full blur-3xl opacity-20 bg-gradient-to-br ${details.themeClasses.accent}`} />
             
@@ -227,27 +227,27 @@ export default function PhaseLifestyle({ onCrisisSOS }) {
                 <h3 className={`text-3xl font-extrabold tracking-tight ${details.themeClasses.text}`}>
                   {details.name}
                 </h3>
-                <p className="text-2xl font-bold text-slate-300 mt-1">Day {cycleDay} of 28</p>
+                <p className="text-2xl font-bold text-charcoal mt-1">Day {cycleDay} of 28</p>
               </div>
 
-              <p className="text-sm text-slate-400 leading-relaxed font-medium mt-3 italic border-l-2 border-slate-750 pl-3">
+              <p className="text-sm text-charcoal-muted leading-relaxed font-medium mt-3 italic border-l-2 border-sage-border pl-3">
                 "{details.tagline}"
               </p>
             </div>
 
             {/* Visual Timeline Progress Bar */}
             <div className="space-y-2 mt-6 relative z-10">
-              <div className="flex justify-between text-[10px] text-slate-500 uppercase tracking-wider font-bold">
+              <div className="flex justify-between text-[10px] text-charcoal-muted uppercase tracking-wider font-bold">
                 <span>Cycle Day 1</span>
                 <span>Day 28</span>
               </div>
-              <div className="w-full h-3 rounded-full bg-slate-950/80 border border-slate-800/60 overflow-hidden flex">
+              <div className="w-full h-3 rounded-full bg-sage-bg border border-sage-border overflow-hidden flex">
                 <div 
                   className={`h-full bg-gradient-to-r ${details.themeClasses.accent} transition-all duration-700 ease-out`}
                   style={{ width: `${(cycleDay / 28) * 100}%` }}
                 />
               </div>
-              <p className="text-[10px] text-slate-400 text-center font-medium">
+              <p className="text-[10px] text-charcoal-muted text-center font-bold">
                 You are currently {Math.round((cycleDay / 28) * 100)}% through this cycle
               </p>
             </div>
@@ -258,22 +258,22 @@ export default function PhaseLifestyle({ onCrisisSOS }) {
         <div className="lg:col-span-7 flex flex-col gap-6">
           
           {/* Card 2: Recommended Diet & Nutrition */}
-          <div className="bg-slate-900 border border-slate-800/80 rounded-3xl p-6 shadow-xl space-y-4">
+          <div className="bg-sage-card border border-sage-border rounded-3xl p-6 shadow-sm space-y-4">
             <div className="flex justify-between items-center">
               <div className="flex items-center gap-2.5">
                 <span className="text-xl">🥗</span>
-                <h4 className="font-semibold text-slate-200 text-sm uppercase tracking-wider">Nutrition & Diet Plan</h4>
+                <h4 className="font-extrabold text-charcoal text-sm uppercase tracking-wider">Nutrition & Diet Plan</h4>
               </div>
               <span className={`text-[10px] font-bold px-3 py-1 rounded-full ${details.themeClasses.lightBadge}`}>
                 {details.nutrition.nutrient}
               </span>
             </div>
 
-            <div className="bg-slate-950/60 border border-slate-800/80 rounded-2xl p-5 shadow-inner">
-              <ul className="space-y-3.5 text-xs text-slate-300 leading-relaxed font-medium">
+            <div className="bg-sage-bg border border-sage-border rounded-2xl p-5 shadow-inner">
+              <ul className="space-y-3.5 text-xs text-charcoal leading-relaxed font-semibold">
                 {details.nutrition.foods.map((food, idx) => (
                   <li key={idx} className="flex items-start gap-2.5">
-                    <span className="text-emerald-500 text-sm mt-0.5">•</span>
+                    <span className="text-moss text-sm mt-0.5">•</span>
                     <span>{food}</span>
                   </li>
                 ))}
@@ -282,29 +282,29 @@ export default function PhaseLifestyle({ onCrisisSOS }) {
           </div>
 
           {/* Card 3: Workout & Movement Guide */}
-          <div className="bg-slate-900 border border-slate-800/80 rounded-3xl p-6 shadow-xl space-y-4">
+          <div className="bg-sage-card border border-sage-border rounded-3xl p-6 shadow-sm space-y-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2.5">
                 <span className="text-xl">🏃‍♀️</span>
-                <h4 className="font-semibold text-slate-200 text-sm uppercase tracking-wider">Workout & Movement</h4>
+                <h4 className="font-extrabold text-charcoal text-sm uppercase tracking-wider">Workout & Movement</h4>
               </div>
               <span className={`text-[10px] font-bold px-3 py-1 rounded-full ${details.themeClasses.lightBadge}`}>
                 {details.movement.activity}
               </span>
             </div>
 
-            <div className="bg-slate-950/60 border border-slate-800/80 rounded-2xl p-5 space-y-5 shadow-inner">
-              <p className="text-xs text-slate-350 leading-relaxed font-medium">
+            <div className="bg-sage-bg border border-sage-border rounded-2xl p-5 space-y-5 shadow-inner">
+              <p className="text-xs text-charcoal leading-relaxed font-semibold">
                 {details.movement.details}
               </p>
 
               {/* Intensity Gauge */}
               <div className="space-y-2">
-                <div className="flex justify-between text-[10px] font-bold uppercase tracking-wider text-slate-500">
+                <div className="flex justify-between text-[10px] font-bold uppercase tracking-wider text-charcoal-muted">
                   <span>Intensity Gauge</span>
                   <span className={details.themeClasses.text}>{details.movement.intensityLabel}</span>
                 </div>
-                <div className="w-full h-2.5 rounded-full bg-slate-900 border border-slate-800 overflow-hidden">
+                <div className="w-full h-2.5 rounded-full bg-sage-card border border-sage-border overflow-hidden">
                   <div 
                     className={`h-full bg-gradient-to-r ${details.themeClasses.accent} transition-all duration-700`}
                     style={{ width: `${details.movement.intensity}%` }}
@@ -315,24 +315,24 @@ export default function PhaseLifestyle({ onCrisisSOS }) {
           </div>
 
           {/* Card 4: Hormonal & Energy Insights */}
-          <div className="bg-slate-900 border border-slate-800/80 rounded-3xl p-6 shadow-xl space-y-4">
+          <div className="bg-sage-card border border-sage-border rounded-3xl p-6 shadow-sm space-y-4">
             <div className="flex items-center gap-2.5">
               <span className="text-xl">🧬</span>
-              <h4 className="font-semibold text-slate-200 text-sm uppercase tracking-wider">Hormonal & Energy Insights</h4>
+              <h4 className="font-extrabold text-charcoal text-sm uppercase tracking-wider">Hormonal & Energy Insights</h4>
             </div>
 
-            <div className="bg-slate-950/60 border border-slate-800/80 rounded-2xl p-5 shadow-inner grid grid-cols-1 md:grid-cols-3 gap-5">
+            <div className="bg-sage-bg border border-sage-border rounded-2xl p-5 shadow-inner grid grid-cols-1 md:grid-cols-3 gap-5">
               <div className="space-y-1.5">
-                <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">Hormone Shift</span>
-                <p className="text-[11px] text-slate-300 leading-relaxed font-medium">{details.insights.hormones}</p>
+                <span className="text-[10px] font-bold text-charcoal-muted uppercase tracking-wider block">Hormone Shift</span>
+                <p className="text-[11px] text-charcoal leading-relaxed font-semibold">{details.insights.hormones}</p>
               </div>
-              <div className="space-y-1.5 border-t md:border-t-0 md:border-l border-slate-800/80 pt-4 md:pt-0 md:pl-5">
-                <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">Energy & Stamina</span>
-                <p className="text-[11px] text-slate-300 leading-relaxed font-medium">{details.insights.energy}</p>
+              <div className="space-y-1.5 border-t md:border-t-0 md:border-l border-sage-border pt-4 md:pt-0 md:pl-5">
+                <span className="text-[10px] font-bold text-charcoal-muted uppercase tracking-wider block">Energy & Stamina</span>
+                <p className="text-[11px] text-charcoal leading-relaxed font-semibold">{details.insights.energy}</p>
               </div>
-              <div className="space-y-1.5 border-t md:border-t-0 md:border-l border-slate-800/80 pt-4 md:pt-0 md:pl-5">
-                <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">Cognitive & Mood</span>
-                <p className="text-[11px] text-slate-300 leading-relaxed font-medium">{details.insights.focus}</p>
+              <div className="space-y-1.5 border-t md:border-t-0 md:border-l border-sage-border pt-4 md:pt-0 md:pl-5">
+                <span className="text-[10px] font-bold text-charcoal-muted uppercase tracking-wider block">Cognitive & Mood</span>
+                <p className="text-[11px] text-charcoal leading-relaxed font-semibold">{details.insights.focus}</p>
               </div>
             </div>
           </div>

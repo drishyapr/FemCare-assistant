@@ -2,7 +2,33 @@
 
 @import "tailwindcss";
 
+@theme {
+  --color-brand-50: #fdf2f8;
+  --color-brand-100: #fce7f3;
+  --color-brand-200: #fbcfe8;
+  --color-brand-300: #f472b6;
+  --color-brand-400: #db2777;
+  --color-brand-500: #be185d;
+  --color-brand-600: #9d174d;
+  --color-brand-700: #831843;
+
+  --color-sage-bg: #f0f5f1;
+  --color-sage-card: #ffffff;
+  --color-sage-border: #e1eae3;
+  --color-sage-accent: #52795d;
+  --color-sage-hover: #eaf1ec;
+  --color-sage-muted: #6b7c70;
+
+  --color-moss: #52795d;
+  --color-moss-hover: #4a6e54;
+  --color-moss-dark: #3d5a45;
+
+  --color-charcoal: #232d25;
+  --color-charcoal-muted: #4a5c50;
+  --color-charcoal-light: #6b7c70;
+}
+
 body {
   font-family: 'Outfit', sans-serif;
-  @apply bg-slate-50 text-slate-900 antialiased;
+  @apply bg-sage-bg text-charcoal antialiased;
 }

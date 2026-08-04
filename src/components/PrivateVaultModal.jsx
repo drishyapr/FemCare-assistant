@@ -159,24 +159,24 @@ export default function PrivateVaultModal({ isLocked, onUnlock, isChangingPin, o
   return (
     <>
       <style>{shakeStyle}</style>
-      <div className="fixed inset-0 z-[9999] bg-slate-950/80 backdrop-blur-2xl flex items-center justify-center select-none overflow-y-auto p-4">
+      <div className="fixed inset-0 z-[9999] bg-[#232d25]/60 backdrop-blur-md flex items-center justify-center select-none overflow-y-auto p-4 animate-fadeIn">
         {/* Animated Background Decorative Orbs */}
-        <div className="absolute top-1/4 left-1/4 w-80 h-80 rounded-full bg-gradient-to-tr from-pink-500/10 to-purple-600/10 blur-3xl animate-pulse pointer-events-none" />
-        <div className="absolute bottom-1/4 right-1/4 w-80 h-80 rounded-full bg-gradient-to-tr from-rose-500/10 to-indigo-600/10 blur-3xl animate-pulse pointer-events-none" style={{ animationDelay: '2s' }} />
+        <div className="absolute top-1/4 left-1/4 w-80 h-80 rounded-full bg-gradient-to-tr from-moss/10 to-sage/10 blur-3xl animate-pulse pointer-events-none" />
+        <div className="absolute bottom-1/4 right-1/4 w-80 h-80 rounded-full bg-gradient-to-tr from-moss/5 to-sage/10 blur-3xl animate-pulse pointer-events-none" style={{ animationDelay: '2s' }} />
 
         {/* Content Box */}
-        <div className={`bg-slate-900/60 border border-slate-800/80 backdrop-blur-md rounded-3xl p-8 shadow-2xl max-w-sm w-full relative overflow-hidden flex flex-col items-center transition-all duration-300 ${
+        <div className={`bg-sage-card border border-sage-border rounded-3xl p-8 shadow-xl max-w-sm w-full relative overflow-hidden flex flex-col items-center transition-all duration-300 ${
           isShaking ? 'shake-animation' : ''
         }`}>
           {/* Top Header/Badge */}
           <div className="flex flex-col items-center text-center space-y-2.5 w-full">
-            <span className="text-[10px] uppercase font-bold tracking-widest px-3.5 py-1 bg-pink-955/20 border border-pink-900/40 text-pink-300 rounded-full">
+            <span className="text-[10px] uppercase font-bold tracking-widest px-3.5 py-1 bg-sage-hover border border-sage-border text-moss rounded-full shadow-sm">
               🔒 {currentStepInfo.badge}
             </span>
-            <h3 className="text-xl font-bold tracking-tight text-white mt-1">
+            <h3 className="text-xl font-extrabold tracking-tight text-charcoal mt-1">
               {currentStepInfo.title}
             </h3>
-            <p className="text-xs text-slate-400 font-medium leading-relaxed px-2">
+            <p className="text-xs text-charcoal-muted font-semibold leading-relaxed px-2">
               {currentStepInfo.desc}
             </p>
           </div>
@@ -190,8 +190,8 @@ export default function PrivateVaultModal({ isLocked, onUnlock, isChangingPin, o
                   key={index}
                   className={`w-3.5 h-3.5 rounded-full transition-all duration-150 ${
                     hasDigit
-                      ? 'bg-pink-500 border border-pink-400 scale-110 shadow-md shadow-pink-500/50'
-                      : 'border-2 border-slate-600 bg-transparent'
+                      ? 'bg-moss border border-moss-hover scale-110 shadow-sm'
+                      : 'border-2 border-sage-border bg-sage-bg'
                   }`}
                 />
               );
@@ -201,7 +201,7 @@ export default function PrivateVaultModal({ isLocked, onUnlock, isChangingPin, o
           {/* Feedback & Error Area */}
           <div className="h-6 w-full text-center mb-4">
             {error && (
-              <span className="text-xs font-semibold text-rose-455 tracking-wide bg-rose-950/20 border border-rose-900/30 px-3 py-1 rounded-lg">
+              <span className="text-xs font-semibold text-rose-600 bg-rose-50 border border-rose-200 px-3 py-1 rounded-xl shadow-sm">
                 ⚠️ {error}
               </span>
             )}
@@ -214,7 +214,7 @@ export default function PrivateVaultModal({ isLocked, onUnlock, isChangingPin, o
                 key={num}
                 type="button"
                 onClick={() => handleKeyPress(num.toString())}
-                className="w-16 h-16 rounded-full bg-slate-800/40 border border-slate-800 hover:border-slate-700/60 hover:bg-slate-750/50 text-white font-semibold text-xl flex items-center justify-center cursor-pointer transition-all active:scale-95 duration-100"
+                className="w-16 h-16 rounded-full bg-sage-bg border border-sage-border hover:bg-sage-hover text-charcoal font-bold text-xl flex items-center justify-center cursor-pointer transition-all active:scale-95 duration-100 shadow-sm"
               >
                 {num}
               </button>
@@ -224,7 +224,7 @@ export default function PrivateVaultModal({ isLocked, onUnlock, isChangingPin, o
             <button
               type="button"
               onClick={handleClear}
-              className="w-16 h-16 rounded-full text-slate-400 hover:text-slate-200 text-xs font-bold uppercase tracking-wider flex items-center justify-center cursor-pointer transition-colors active:scale-95"
+              className="w-16 h-16 rounded-full text-charcoal-muted hover:text-charcoal text-xs font-bold uppercase tracking-wider flex items-center justify-center cursor-pointer transition-colors active:scale-95"
             >
               Clear
             </button>
@@ -233,7 +233,7 @@ export default function PrivateVaultModal({ isLocked, onUnlock, isChangingPin, o
             <button
               type="button"
               onClick={() => handleKeyPress('0')}
-              className="w-16 h-16 rounded-full bg-slate-800/40 border border-slate-800 hover:border-slate-700/60 hover:bg-slate-750/50 text-white font-semibold text-xl flex items-center justify-center cursor-pointer transition-all active:scale-95 duration-100"
+              className="w-16 h-16 rounded-full bg-sage-bg border border-sage-border hover:bg-sage-hover text-charcoal font-bold text-xl flex items-center justify-center cursor-pointer transition-all active:scale-95 duration-100 shadow-sm"
             >
               0
             </button>
@@ -242,7 +242,7 @@ export default function PrivateVaultModal({ isLocked, onUnlock, isChangingPin, o
             <button
               type="button"
               onClick={handleBackspace}
-              className="w-16 h-16 rounded-full text-slate-400 hover:text-slate-200 text-base flex items-center justify-center cursor-pointer transition-colors active:scale-95"
+              className="w-16 h-16 rounded-full text-charcoal-muted hover:text-charcoal text-base flex items-center justify-center cursor-pointer transition-colors active:scale-95 font-bold"
               title="Delete Digit"
             >
               ⌫
@@ -254,7 +254,7 @@ export default function PrivateVaultModal({ isLocked, onUnlock, isChangingPin, o
             <button
               type="button"
               onClick={onCancelChangePin}
-              className="mt-6 text-xs text-slate-400 hover:text-pink-400 font-semibold uppercase tracking-wider transition-colors cursor-pointer"
+              className="mt-6 text-xs text-charcoal-muted hover:text-moss font-bold uppercase tracking-wider transition-colors cursor-pointer"
             >
               Cancel Change
             </button>
